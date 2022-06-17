@@ -1,0 +1,180 @@
+#!/usr/bin/env nix-script-bash
+#!runtimeInputs dbus kdeconnect libnotify pulseaudio ripgrep systemd
+# vim: set ft=bash:
+# shellcheck shell=bash
+
+set -e
+
+kdeconnect-cli --refresh || true
+
+if [ -f ~/.secrets/fix-audio.secrets ]; then
+	. ~/.secrets/fix-audio.secrets
+else
+	echo "secrets not available" >&2
+	exit 1
+fi
+
+# sources we should try to listen to
+SOURCE_Q2UMIC=$sec_q2umic_source_name
+SOURCE_GOMIC=$sec_gomic_source_name
+SOURCE_INTERNAL=$sec_internal_source_name
+
+# sinks we should try to play from
+SINK_HEADPHONES=$sec_headphones_sink_name
+SINK_INTERNAL=$sec_internal_sink_name
+
+CARD_HEADPHONES=$sec_headphones_card_name
+
+bail() {
+	echo "$1" >&2
+	exit "${2:-1}"
+}
+
+dbg() {
+	if [ -t 1 ]; then
+		fmt=$1
+		shift
+		printf "$fmt\n" "$@"
+	fi
+}
+
+refresh_state() {
+	current_state=$(pacmd dump)
+	current_sources=$(rg -xor '$1' "suspend-source (\S+) (yes|no)" <<< "$current_state")
+	current_sinks=$(rg -xor '$1' "suspend-sink (\S+) (yes|no)" <<< "$current_state")
+	current_cards=$(rg -xor '$1' "set-card-profile (\S+) (.+)" <<< "$current_state")
+	current_source=$(rg -xor '$1' "set-default-source (.+)" <<< "$current_state")
+	current_sink=$(rg -xor '$1' "set-default-sink (.+)" <<< "$current_state")
+}
+
+update_pending_source_sink() {
+	# output to bluetooth headphones else internal speakers/headphone jack
+	if rg -w "$SINK_HEADPHONES" <<< "$current_sinks" >/dev/null; then
+		dbg "output to headphones (was %s)" "$current_sink"
+		new_sink="$SINK_HEADPHONES"
+		printf 'headphones'
+	else
+		dbg "output to internal (was %s)" "$current_sink"
+		rg -w "$SINK_INTERNAL" <<< "$current_sinks" >/dev/null || bail 'internal sink not available'
+		new_sink="$SINK_INTERNAL"
+		printf 'internal'
+	fi
+	printf '/'
+	# input from q2umic else gomic else internal speakers/microphone jack
+	if rg -w "$SOURCE_Q2UMIC" <<< "$current_sources" >/dev/null; then
+		dbg "input from q2umic (was %s)" "$current_source"
+		new_source="$SOURCE_Q2UMIC"
+		printf 'mic (q2u)'
+	elif rg -w "$SOURCE_GOMIC" <<< "$current_sources" >/dev/null; then
+		dbg "input from gomic (was %s)" "$current_source"
+		new_source="$SOURCE_GOMIC"
+		printf 'mic'
+	else
+		dbg "input from internal (was %s)" "$current_source"
+		rg -w "$SOURCE_INTERNAL" <<< "$current_sources" >/dev/null || bail 'internal source not available'
+		new_source="$SOURCE_INTERNAL"
+		printf 'internal'
+	fi
+}
+
+set_source_sink() {
+	# switch the default source and sink to the new ones
+	pactl set-default-sink "$new_sink"
+	pactl set-default-source "$new_source"
+
+	skip_this_index=0
+	# switch all sink inputs to the new sink
+	# the whitespace here is extremely fragile don't mess with it
+	pacmd list-sink-inputs | while read -r; do
+	case $REPLY in
+		"    index:"*) this_index=$(rg -xor '$1' '    index: (\d+)' <<< "$REPLY"); skip_this_index=0;;
+		"       flags:"*) rg -w DONT_MOVE <<< "$REPLY" >/dev/null && skip_this_index=1;;
+		"       sink:"*) this_sink=$(rg -xor '$1' '     sink: \d+ <(.+)>' <<< "$REPLY");;
+		"       volume:"*)
+			if [ "$skip_this_index" != 1 ]; then
+				dbg "moving sink input %s (was on %s)" "$this_index" "$this_sink"
+				pactl move-sink-input "$this_index" "$new_sink"
+			else
+				dbg "not moving unmovable sink input %s" "$this_index"
+			fi
+			;;
+		esac
+	done
+
+	skip_this_index=0
+	# switch all source outputs to the new source
+	# the whitespace here is extremely fragile don't mess with it
+	pacmd list-source-outputs | while read -r; do
+	case $REPLY in
+		"    index:"*) this_index=$(rg -xor '$1' '    index: (\d+)' <<< "$REPLY"); skip_this_index=0;;
+		"       flags:"*) rg -w DONT_MOVE <<< "$REPLY" >/dev/null && skip_this_index=1;;
+		"       source:"*) this_source=$(rg -xor '$1' ' source: \d+ <(.+)>' <<< "$REPLY");;
+		"       volume:"*)
+			if [ "$skip_this_index" != 1 ]; then
+				dbg "moving source output %s (was on %s)" "$this_index" "$this_source"
+				pactl move-source-output "$this_index" "$new_source"
+			else
+				dbg "not moving unmovable source output %s" "$this_index"
+			fi
+			;;
+		esac
+	done
+
+	if rg "set-sink-mute $new_sink yes" <<< "$current_state" > /dev/null; then
+		notify-send "Audio warning" "the default sink is muted"
+	fi
+}
+
+if [ "$(rfkill -o SOFT -n list bluetooth)" = "blocked" ] || [ -z "$(dbus-send --system --dest=org.bluez --print-reply=literal /org/bluez/hci0 org.freedesktop.DBus.Properties.Get string:org.bluez.Adapter1 string:Powered | grep "boolean true")" ]; then
+	notify-send "Bluetooth disabled" "(press mod+b)"
+	refresh_state
+	update_pending_source_sink
+	set_source_sink
+	exit 1
+fi
+
+refresh_state
+
+# ask phone to disconnect from headphones
+curl -sS -X POST "$sec_phone_disconnect_url_post" >/dev/null &
+curl -sS "$sec_phone_disconnect_url_get" >/dev/null &
+kdeconnect-cli --name "$sec_phone_kdeconnect_name" --device "$sec_phone_kdeconnect_id" --ping-msg "cmd:cmd_phone_disconnect_headphones" &
+
+# if bluetooth headphones are connected, make sure they're using a2dp profile
+if rg -w "$CARD_HEADPHONES" <<< "$current_cards" >/dev/null; then
+	pacmd set-card-profile "$CARD_HEADPHONES" off || notify-send -t 2000 "pulseaudio machine broke?" "couldn't turn off headphones (continuing)"
+	attempt=$(pacmd set-card-profile "$CARD_HEADPHONES" a2dp_sink)
+	if [ "$attempt" = "Failed to set card profile to 'a2dp_sink'." ]; then
+		# haha bluetooth machine go brrr
+		notify-send -t 2000 "bluetooth machine broke" "fixing it, one sec..."
+		dbus-send --print-reply --system --dest=org.bluez /org/bluez/hci0/dev_$(tr : _ <<< "$sec_headphones_mac") org.bluez.Device1.Disconnect >/dev/null
+		sleep 0.5
+		dbus-send --print-reply --system --dest=org.bluez /org/bluez/hci0/dev_$(tr : _ <<< "$sec_headphones_mac") org.bluez.Device1.Connect >/dev/null
+		x=0
+		while ! echo devices | bluetoothctl | grep -q "Device $sec_headphones_mac $sec_headphones_name"; do
+			x=$((x+1))
+			sleep 0.5
+			if [ $x -gt 5 ]; then
+				notify-send "bluetooth is awful" "couldn't connect to headphones"
+				break
+			fi
+		done
+		refresh_state
+	else
+		sleep 2
+		refresh_state
+	fi
+else # if bluetooth headphones aren't connected, try and connect
+	notify-send -t 2000 -h string:x-dunst-stack-tag:bluetoothsucks "bluetooth sucks" "trying to connect..."
+	if ! dbus-send --print-reply --system --dest=org.bluez /org/bluez/hci0/dev_$(tr : _ <<< "$sec_headphones_mac") org.bluez.Device1.Connect >/dev/null; then
+		notify-send -t 2000 "bluetooth is awful" "pls enter password to restart bluetooth service"
+		systemctl restart bluetooth
+		sleep 3
+		dbus-send --print-reply --system --dest=org.bluez /org/bluez/hci0/dev_$(tr : _ <<< "$sec_headphones_mac") org.bluez.Device1.Connect >/dev/null
+	fi
+	sleep 3
+	refresh_state
+fi
+
+update_pending_source_sink
+set_source_sink

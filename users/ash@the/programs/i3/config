@@ -1,0 +1,388 @@
+# i3 config file (v4)
+
+set $alt Mod1
+set $mod Mod4
+set $textier Mod1+Mod4+Shift+Control
+
+bindsym $textier+c exec --no-startup-id iot big-lamp off
+bindsym $textier+d exec --no-startup-id iot big-lamp on
+bindsym $textier+g exec --no-startup-id iot small-lamp off
+bindsym $textier+h exec --no-startup-id iot small-lamp on
+bindsym $textier+k exec --no-startup-id iot heater off
+bindsym $textier+l exec --no-startup-id iot heater on
+bindsym $textier+a exec --no-startup-id notify-send hi
+bindsym $textier+q [urgent=latest] focus
+bindsym $textier+j exec sleep 1 && systemctl suspend
+
+font pango:Jost* Book 11
+title_align center
+for_window [all] title_window_icon on
+
+default_border normal 0
+default_floating_border normal 0
+# even windows with CSD should get a titlebar https://github.com/i3/i3/issues/2255
+for_window [tiling] border normal 0
+
+# avoid new qutebrowser tabs (read: windows) getting focus when opened from within qutebrowser
+no_focus [class="qutebrowser" instance=__focused__]
+
+workspace_layout tabbed
+
+# colours (gruvbox light)
+set $bg #fbf1c7
+set $greyd #928374
+set $redl #cc241d
+set $redd #9d0006
+set $greenl #98971a
+set $greend #79740e
+set $yellowl #d79931
+set $yellowd #b57614
+set $bluel #458588
+set $blued #076678
+set $purplel #b16286
+set $purpled #8f3f71
+set $aqual #689d6a
+set $aqud a#427b58
+set $greyl #7c6f64
+set $fg #3c3836
+set $bg0_h #f9f5d7
+set $bg0 #fbf1c7
+set $bg1 #ebdbb2
+set $bg2 #d5c4a1
+set $bg3 #bdae93
+set $bg4 #a89984
+set $orangel #d65d0e
+set $oranged #af3a03
+set $bg0_s #f2e5bc
+set $fg4 #7c6f64
+set $fg3 #665c54
+set $fg2 #504945
+set $fg1 #3c3836
+set $fg0 #282828
+
+set $qpurple #662d91
+set $qgreen #8dc63f
+set $qorange #f7941d
+set $qpink #ec008c
+
+# class                 border   bg       text  indicator child_border
+client.focused          $qgreen  $qgreen  $fg0  $qgreen   $qgreen
+client.focused_inactive $bg1     $bg1     $fg0  $bg3      $bg2
+client.unfocused        $bg2     $bg2     $fg0  $bg4      $bg3
+client.urgent           $qorange $qorange $fg0  $qorange  $qorange
+
+bindsym $mod+Shift+b border toggle
+
+focus_follows_mouse no
+focus_wrapping no
+mouse_warping none
+focus_on_window_activation focus
+
+floating_modifier $mod
+
+bindsym $mod+Return exec exec i3-sensible-terminal
+
+bindsym $mod+Shift+q kill
+bindsym button2 nop
+bindsym --release button2 kill
+
+# keyboard volume controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && display-volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && display-volume
+bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +1% && display-volume
+bindsym Shift+XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -1% && display-volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && display-volume
+bindsym $textier+i exec --no-startup-id "pactl set-source-mute @DEFAULT_SOURCE@ toggle && notify-send 'Toggled mute'"
+
+# keyboard media controls
+bindsym XF86AudioPrev exec --no-startup-id playerctl --player playerctld previous
+bindsym XF86AudioPlay exec --no-startup-id playerctl --player playerctld play-pause
+bindsym XF86AudioNext exec --no-startup-id playerctl --player playerctld next
+
+# keyboard brightness controls
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set 9%+; exec --no-startup-id sleep 0.05 && notify-send -a brightness -h string:synchronous:brightness -h int:value:$(( $(brightnessctl get) * 100 / $(brightnessctl max) )) $(( $(brightnessctl get) * 100 / $(brightnessctl max) ))%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 9%-; exec --no-startup-id sleep 0.05 && notify-send -a brightness -h string:synchronous:brightness -h int:value:$(( $(brightnessctl get) * 100 / $(brightnessctl max) )) $(( $(brightnessctl get) * 100 / $(brightnessctl max) ))%
+bindsym Shift+XF86MonBrightnessUp exec --no-startup-id brightnessctl set 1%+; exec --no-startup-id sleep 0.05 && notify-send -a brightness -h string:synchronous:brightness -h int:value:$(( $(brightnessctl get) * 100 / $(brightnessctl max) )) $(( $(brightnessctl get) * 100 / $(brightnessctl max) ))%
+bindsym Shift+XF86MonBrightnessDown exec --no-startup-id brightnessctl set 1%-; exec --no-startup-id sleep 0.05 && notify-send -a brightness -h string:synchronous:brightness -h int:value:$(( $(brightnessctl get) * 100 / $(brightnessctl max) )) $(( $(brightnessctl get) * 100 / $(brightnessctl max) ))%
+
+bindsym $mod+d exec --no-startup-id rofi -show run -display-window '' -display-run '' -display-ssh '' -display-drun ''
+bindsym $mod+Shift+d exec --no-startup-id rofi -show drun -display-window '' -display-run '' -display-ssh '' -display-drun ''
+bindsym $mod+grave exec --no-startup-id rofi -show window -display-window '' -display-run '' -display-ssh '' -display-drun ''
+bindsym $mod+Menu exec --no-startup-id bash -c 'set -o pipefail && out=$(2>&1 eval $(grep -v "^#" ~/.local/bin/commands.list | rofi -dmenu -i -p "" | cut -f2-)) || notify-send "Task failed" "$out"'
+
+bindsym --release Print exec --no-startup-id screenshot ~/Pictures/Screenshots/"Screenshot from $(date '+%Y-%m-%d %H-%M-%S').png"
+bindsym --release Ctrl+Print exec --no-startup-id screenshot | xclip -selection clipboard -t image/png
+bindsym --release Shift+Print exec --no-startup-id screenshot -s ~/Pictures/Screenshots/"Screenshot from $(date '+%Y-%m-%d %H-%M-%S').png"
+bindsym --release Ctrl+Shift+Print exec --no-startup-id screenshot -s | xclip -selection clipboard -t image/png
+# https://github.com/flameshot-org/flameshot/issues/784
+bindsym $mod+Print exec --no-startup-id "sh -c 'focusedwindow=$(xdotool getactivewindow) && flameshot gui -g >/dev/null; test \\"$focusedwindow\\" == \\"$(xdotool getactivewindow)\\" && xdotool windowfocus \\"$focusedwindow\\"'"
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+bindsym $mod+Control+h focus output left
+bindsym $mod+Control+j focus output down
+bindsym $mod+Control+k focus output up
+bindsym $mod+Control+l focus output right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+bindsym $mod+Control+Left focus output left
+bindsym $mod+Control+Down focus output down
+bindsym $mod+Control+Up focus output up
+bindsym $mod+Control+Right focus output right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+bindsym $mod+Shift+Control+h move container to output left; focus output left
+bindsym $mod+Shift+Control+j move container to output down; focus output down
+bindsym $mod+Shift+Control+k move container to output up; focus output up
+bindsym $mod+Shift+Control+l move container to output right; focus output right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+bindsym $mod+Shift+Control+Left move container to output left; focus output left
+bindsym $mod+Shift+Control+Down move container to output down; focus output down
+bindsym $mod+Shift+Control+Up move container to output up; focus output up
+bindsym $mod+Shift+Control+Right move container to output right; focus output right
+
+# split in horizontal orientation
+bindsym $mod+bar split h
+
+# split in vertical orientation
+bindsym $mod+minus split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# Move the focused (floating) window to the centre of the screen.
+bindsym $mod+Shift+grave move position center
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# focus the child container
+bindsym $mod+z focus child
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+set $ws0 0
+set $ws1 1
+set $ws2 2
+set $ws3 3
+set $ws4 4
+set $ws5 5
+set $ws6 6
+set $ws7 7
+set $ws8 8
+set $ws9 9
+
+# default workspaces to particular monitors
+workspace $ws0 output eDP-1 eDP-1-1 eDP1
+workspace $ws1 output eDP-1 eDP-1-1 eDP1
+workspace $ws2 output eDP-1 eDP-1-1 eDP1
+workspace $ws3 output eDP-1 eDP-1-1 eDP1
+workspace $ws4 output eDP-1 eDP-1-1 eDP1
+workspace $ws5 output HDMI-2 HDMI-1-2 HDMI2
+workspace $ws6 output HDMI-2 HDMI-1-2 HDMI2
+workspace $ws7 output HDMI-2 HDMI-1-2 HDMI2
+workspace $ws8 output HDMI-2 HDMI-1-2 HDMI2
+workspace $ws9 output HDMI-2 HDMI-1-2 HDMI2
+workspace 10 output HDMI-1 HDMI-1-1 HDMI1 DP-1-1 eDP-1-1
+workspace 11 output HDMI-1 HDMI-1-1 HDMI1 DP-1-1 eDP-1-1
+workspace 12 output HDMI-1 HDMI-1-1 HDMI1 DP-1-1 eDP-1-1
+workspace 13 output HDMI-1 HDMI-1-1 HDMI1 DP-1-1 eDP-1-1
+workspace 14 output HDMI-1 HDMI-1-1 HDMI1 DP-1-1 eDP-1-1
+workspace 15 output HDMI-2 HDMI-1-2 HDMI2
+workspace 16 output HDMI-2 HDMI-1-2 HDMI2
+workspace 17 output HDMI-2 HDMI-1-2 HDMI2
+workspace 18 output HDMI-2 HDMI-1-2 HDMI2
+workspace 19 output HDMI-2 HDMI-1-2 HDMI2
+
+# switch to workspace
+bindsym $mod+0 workspace number $ws0
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+Ctrl+0 workspace number 10
+bindsym $mod+Ctrl+1 workspace number 11
+bindsym $mod+Ctrl+2 workspace number 12
+bindsym $mod+Ctrl+3 workspace number 13
+bindsym $mod+Ctrl+4 workspace number 14
+bindsym $mod+Ctrl+5 workspace number 15
+bindsym $mod+Ctrl+6 workspace number 16
+bindsym $mod+Ctrl+7 workspace number 17
+bindsym $mod+Ctrl+8 workspace number 18
+bindsym $mod+Ctrl+9 workspace number 19
+bindsym $mod+bracketleft workspace prev_on_output
+bindsym $mod+bracketright workspace next_on_output
+
+# nop out these (so other apps can use them as global hotkeys)
+bindsym $mod+F1 exec true
+bindsym $mod+F2 exec true
+bindsym $mod+F3 exec true
+bindsym $mod+F4 exec true
+bindsym $mod+F5 exec true
+bindsym $mod+F6 exec true
+bindsym $mod+F7 exec true
+bindsym $mod+F8 exec true
+bindsym $mod+F9 exec true
+bindsym $mod+F10 exec true
+bindsym $mod+F11 exec true
+bindsym $mod+F12 exec true
+
+# move focused container
+bindsym $mod+Shift+0 move container to workspace number $ws0; workspace number $ws0
+bindsym $mod+Shift+1 move container to workspace number $ws1; workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2; workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3; workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4; workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5; workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6; workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7; workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8; workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9; workspace number $ws9
+bindsym $mod+Ctrl+Shift+0 move container to workspace number 10; workspace number 10
+bindsym $mod+Ctrl+Shift+1 move container to workspace number 11; workspace number 11
+bindsym $mod+Ctrl+Shift+2 move container to workspace number 12; workspace number 12
+bindsym $mod+Ctrl+Shift+3 move container to workspace number 13; workspace number 13
+bindsym $mod+Ctrl+Shift+4 move container to workspace number 14; workspace number 14
+bindsym $mod+Ctrl+Shift+5 move container to workspace number 15; workspace number 15
+bindsym $mod+Ctrl+Shift+6 move container to workspace number 16; workspace number 16
+bindsym $mod+Ctrl+Shift+7 move container to workspace number 17; workspace number 17
+bindsym $mod+Ctrl+Shift+8 move container to workspace number 18; workspace number 18
+bindsym $mod+Ctrl+Shift+9 move container to workspace number 19; workspace number 19
+bindsym $mod+Shift+bracketleft move container to workspace prev; workspace prev
+bindsym $mod+Shift+bracketright move container to workspace next; workspace next
+
+bindsym $mod+x exec --no-startup-id exec i3-workspace-swap
+
+# these daemons die when i3 restarts, so just run them always
+# (it shouldn't be *too* bad if they end up duplicated anyway)
+# switch between workspaces on the current output
+exec_always --no-startup-id exec backandforthd
+bindsym $mod+Tab exec --no-startup-id backandforth
+bindsym $mod+Shift+Tab exec --no-startup-id i3-msg -q "move container to workspace $(backandforth -n)" && backandforth
+# switch between outputs
+exec_always --no-startup-id exec outputbackandforthd
+bindsym Mod1+Tab exec --no-startup-id outputbackandforth
+bindsym Mod1+Shift+Tab exec --no-startup-id i3-msg -q "move container to output $(outputbackandforth -n)" && outputbackandforth
+# switch between containers
+exec_always --no-startup-id exec containerbackandforthd
+bindsym $textier+r exec --no-startup-id containerbackandforth
+
+bindsym $mod+o scratchpad show
+
+bindsym Ctrl+grave exec --no-startup-id dunstctl close
+bindsym Ctrl+Shift+grave exec --no-startup-id dunstctl close-all
+bindsym Ctrl+$alt+grave exec --no-startup-id dunstctl context
+bindsym $mod+Ctrl+grave exec --no-startup-id dunstctl history-pop
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+# lock the screen
+bindsym $mod+Shift+f exec --no-startup-id lock
+# lock the screen and force it to turn off now
+bindsym $mod+Shift+p exec --no-startup-id lock xset dpms force off
+# lock the screen and suspend
+bindsym $mod+Shift+BackSpace exec --no-startup-id lock systemctl suspend
+
+bindsym $mod+r exec --no-startup-id remind $(zenity --entry --text "Reminder (time message):" --title "New reminder" --width 400)
+
+exec --no-startup-id udevadm monitor -us usb/usb_device | grep --line-buffered -w add | xargs -d '\n' -I{} paplay /home/ash/Secrets/device-add.wav
+exec --no-startup-id udevadm monitor -us usb/usb_device | grep --line-buffered -w remove | xargs -d '\n' -I{} paplay /home/ash/Secrets/device-remove.wav
+
+set $mode_shutdown "(l)ogout, (s)hutdown, (r)eboot"
+mode $mode_shutdown {
+        bindsym l exit
+        bindsym r exec --no-startup-id systemctl reboot
+        bindsym s exec --no-startup-id shutdown now
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+Escape mode "default"
+}
+bindsym $mod+Escape mode $mode_shutdown
+
+set $mode_rearrange "rearrange workspaces (hjkl)"
+mode $mode_rearrange {
+        bindsym h move workspace to output left
+        bindsym j move workspace to output down
+        bindsym k move workspace to output up
+        bindsym l move workspace to output right
+        bindsym Left move workspace to output left
+        bindsym Down move workspace to output down
+        bindsym Up move workspace to output up
+        bindsym Right move workspace to output right
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+Shift+x mode "default"
+}
+bindsym $mod+Shift+x mode $mode_rearrange
+
+set $mode_bluetooth "bluetooth: (e)nable, (d)isable"
+mode $mode_bluetooth {
+        bindsym e exec bluetoothctl -- power on; mode "default"
+        bindsym d exec bluetoothctl -- power off; mode "default"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+b mode "default"
+}
+bindsym $mod+b mode $mode_bluetooth
+
+set $transparent #ffffff88
+set $translucent #28282855
+bar {
+        i3bar_command exec i3bar -t
+        status_command exec i3status-rs ~/.config/i3status-rust/config-default.toml
+        # Place application indicators on the display most likely to be in front of me.
+        tray_output HDMI-1-2 # managed by i3-tray-shuffler
+        tray_output HDMI-2 # managed by i3-tray-shuffler
+        tray_output eDP-1-1 # managed by i3-tray-shuffler
+        tray_output primary # managed by i3-tray-shuffler
+        tray_output primary
+        font pango:Jost*, Source Sans Variable, Font Awesome 5 Pro, Font Awesome 5 Brands Regular 13
+        # separator_symbol " "
+        # tray_padding 2px
+        colors {
+                # class            border        bg            text
+                focused_workspace  $qgreen       $qgreen       $fg
+                active_workspace   $bg1          $bg1          $fg
+                inactive_workspace $transparent  $transparent  $fg0
+                urgent_workspace   $qorange      $qorange      $fg
+                background $transparent
+        }
+}
+
+# vim: set sw=8 et:

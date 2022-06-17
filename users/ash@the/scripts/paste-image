@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ -t 1 ] && [ "$1" != "--force" ]; then
+	echo "This script will output binary image data to stdout. You probably don't want to run it interactively! Pass --force to bypass this warning."
+	exit 1
+fi
+
+mimetypes=(image/png image/jpeg)
+
+available_targets=$(xclip -sel clip -t TARGETS -o)
+chosen_target=
+for mime in "${mimetypes[@]}"; do
+	if grep -qxF "$mime" <<< "$available_targets"; then
+		chosen_target=$mime
+		break
+	fi
+done
+while [ -z "$chosen_target" ]; do
+	chosen_target=$(zenity --list --title "Unknown file type" --text "Which part of the clipboard should I use?" --column Target $available_targets --height 400)
+	if ! grep -qxF "$chosen_target" <<< "$available_targets"; then
+		chosen_target=
+	fi
+done
+
+xclip -sel clip -t "$chosen_target" -o

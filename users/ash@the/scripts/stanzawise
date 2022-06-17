@@ -1,0 +1,14 @@
+#!/bin/sh
+
+stanza=
+
+while IFS="" read -r line; do
+	if [ "$line" ]; then
+		stanza="$stanza\t$line"
+	else
+		printf '%s\n' "$stanza"
+		stanza=
+	fi
+done
+
+[ "$stanza" ] && printf '%s\n' "$stanza"

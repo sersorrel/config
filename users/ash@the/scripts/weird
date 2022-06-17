@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+
+weird() {
+	case $1 in
+		keyboard)
+			setxkbmap -layout gb-qw0rty -option caps:super -option altwin:swap_lalt_lwin -option lv3:ralt_switch_multikey;;
+		*)
+			echo "unrecongised argument: $1" >&2
+			exit 1;;
+	esac
+}
+
+unweird() {
+	case $1 in
+		keyboard)
+			setxkbmap -layout gb -option "";;
+		*)
+			echo "unrecongised argument: $1" >&2
+			exit 1;;
+	esac
+}
+
+if [ "$(basename "$0")" = "weird" ]; then
+	weird "$@"
+else
+	unweird "$@"
+fi

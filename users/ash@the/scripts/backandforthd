@@ -1,0 +1,57 @@
+#!/usr/bin/env nix-script
+#!build cp $SRC $OUT
+#!runtimeInputs python310
+#!interpreter python
+# vim: set ft=python:
+
+import json
+import os
+import shutil
+import subprocess
+from pathlib import Path
+
+UID = os.getuid()
+DIR = Path(f"/var/run/user/{UID}/i3backandforthd")
+
+if DIR.exists():
+    shutil.rmtree(DIR)
+DIR.mkdir()
+(DIR / "old").mkdir()
+(DIR / "current").mkdir()
+
+with subprocess.Popen(
+    ["i3-msg", "-t", "subscribe", "-m", '["workspace"]'],
+    stdout=subprocess.PIPE,
+    bufsize=1,
+    text=True,
+) as p:
+    for line in p.stdout:
+        data = json.loads(line)
+        if data["change"] != "focus" or data["old"] is None:
+            continue
+        old_output = data["old"]["output"]
+        current_output = data["current"]["output"]
+        old_workspace = data["old"]["name"]
+        current_workspace = data["current"]["name"]
+        if old_output != current_output:
+            # If we changed output, we have to use stored data to work out whether we changed workspace on the new output.
+            if (DIR / "current" / current_output).exists():
+                with open(DIR / "current" / current_output) as f:
+                    prev_current_workspace = f.read().strip()
+                if prev_current_workspace != current_workspace:
+                    # We changed workspace to current_workspace, on current_output.
+                    with open(DIR / "old" / current_output, "w") as f:
+                        f.write(prev_current_workspace)
+                    with open(DIR / "current" / current_output, "w") as f:
+                        f.write(current_workspace)
+                # Otherwise, we just returned to the same workspace that was already selected.
+            else:
+                # We don't know what the old workspace for the current output was, but regardless:
+                with open(DIR / "current" / current_output, "w") as f:
+                    f.write(current_workspace)
+        else:
+            # We stayed on the same output, so all the information we need is in the event.
+            with open(DIR / "old" / current_output, "w") as f:
+                f.write(old_workspace)
+            with open(DIR / "current" / current_output, "w") as f:
+                f.write(current_workspace)

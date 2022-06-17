@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+set -e
+
+declare -A extensions
+extensions=(
+	["image/png"]="png"
+	["image/jpeg"]="jpg"
+	["text/plain"]="txt"
+)
+
+uuid=$(uuidgen -r)
+temp=$(mktemp)
+cleanup() {
+	rm -f "$temp"
+}
+trap cleanup EXIT
+
+usage() {
+	echo "Usage: $(basename "$0") [--] [FILE]"
+}
+
+case $1 in
+	-h|--help) usage; exit 0;;
+	--) if [ $# -eq 2 ]; then filename=$2; else usage; exit 1; fi;;
+	-) if [ $# -eq 1 ]; then sponge "$temp"; filename="$temp"; else usage; exit 1; fi;;
+	*) if [ $# -eq 1 ]; then filename=$1; elif [ $# -eq 0 ]; then sponge "$temp"; filename="$temp"; else usage; exit 1; fi;;
+esac
+
+mimetype=$(file -b --mime-type "$filename")
+extension=${extensions[$mimetype]}
+if [ -n "$extension" ]; then
+	name=$uuid.$extension
+else
+	name=$uuid
+fi
+text="What filename should I use for the public file?\n\nMIME type: $mimetype"
+if [ "$filename" != "$temp" ]; then
+	x=$filename
+	x=${x//\\/\\\\}
+	x=${x//&/&amp;}
+	x=${x//</&lt;}
+	x=${x//>/&gt;}
+	text="$text\n\nThe original filename was: $x"
+fi
+name=$(zenity --entry --title "Choose a filename" --text "$text" --entry-text "$name" --width 500)
+
+rsync --chmod=644 "$filename" files_public:"/home/public/public/$name"
+
+echo "https://sorrel.sh/public/$name"

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# vim: set ft=bash:
+
+set -e
+set -o pipefail
+
+old_output=$(cat "/var/run/user/$(id -u)/i3outputbackandforthd/old" || true)
+
+if ! [ "$old_output" ]; then
+	# Just switch to the other output, if there're only two
+	workspaces_json=$(i3-msg -t get_workspaces)
+	outputs_json=$(i3-msg -t get_outputs)
+	current_output=$(jq -r '.[] | select(.focused) .output' <<< "$workspaces_json")
+	num_outputs=$(jq -r '[ .[] | select(.active) ] | length' <<< "$outputs_json")
+	if [ "$num_outputs" = 2 ]; then
+		old_output=$(jq -r '.[] | select(.active) | select(.name != "'"$current_output"'") .name' <<< "$outputs_json")
+	else
+		# Nothing we can do...
+		exit
+	fi
+fi
+
+if [ "$1" != "-n" ] && [ "$1" != "--dry-run" ]; then
+	i3-msg -q "focus output $old_output"
+else
+	printf '%s\n' "$old_output"
+fi

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+stanza=
+
+while IFS="" read -r line; do
+	if [ "$line" ]; then
+		if [ "$stanza" ]; then
+			stanza="$stanza"$'\n'"$line"
+		else
+			stanza="$line"
+		fi
+	else
+		"$@" <<< "$stanza"
+		stanza=
+	fi
+done
+
+if [ "$stanza" ]; then
+	"$@" <<< "$stanza"
+fi

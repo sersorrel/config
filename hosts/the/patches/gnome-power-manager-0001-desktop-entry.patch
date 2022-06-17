@@ -1,0 +1,12 @@
+diff --git a/data/org.gnome.PowerStats.desktop.in.in b/data/org.gnome.PowerStats.desktop.in.in
+index 4707130e..7e1e00d6 100644
+--- a/data/org.gnome.PowerStats.desktop.in.in
++++ b/data/org.gnome.PowerStats.desktop.in.in
+@@ -9,7 +9,6 @@ Exec=gnome-power-statistics
+ Terminal=false
+ Type=Application
+ Categories=GNOME;GTK;System;Monitor;
+-OnlyShowIn=GNOME;Unity;
+ StartupNotify=true
+ X-GNOME-Bugzilla-Bugzilla=GNOME
+ X-GNOME-Bugzilla-Product=gnome-power-manager

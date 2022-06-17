@@ -1,0 +1,6 @@
+#!/usr/bin/env nix-script-bash
+#!runtimeInputs gnome.zenity ripgrep xorg.xrandr
+# vim: set ft=bash:
+# shellcheck shell=bash
+
+screenshot -g "$(zenity --list --title "Select a display" --text "Select a display to screenshot." --column Geometry --column Display $(xrandr | rg -or '$2 $1' '(\S+)\s(?:.+\s)?(\d+x\d+\+\d+\+\d+)'))" "$@"

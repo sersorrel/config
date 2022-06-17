@@ -1,0 +1,49 @@
+#!/usr/bin/env nix-script-bash
+#!runtimeInputs bat bintools bzip2 gnutar gzip p7zip poppler_utils unzip xz
+# vim: set ft=bash:
+# shellcheck shell=bash
+
+# If we can't read the input file, bail out.
+if ! [ -r "$1" ]; then
+	exit 0
+fi
+
+# Create the output file.
+umask 077
+outfile=$(mktemp)
+if [ -z "$outfile" ]; then
+	exit 0
+fi
+
+# Process the file.
+case $(echo "$1" | tr '[:upper:]' '[:lower:]') in
+	*.a) ar tv "$1" >"$outfile";;
+	*.tar.bz2) bunzip2 -dc "$1" | tar tvvf - >"$outfile";;
+	*.bz|*.bz2) bunzip2 -dc "$1" >"$outfile";;
+	*.pdf) pdftotext -layout "$1" - >"$outfile";;
+	*.tar.gz|*.tgz) tar tzvf "$1" --force-local >"$outfile";;
+	*.gz) gzip -dc "$1" >"$outfile";;
+	*.tar.xz|*.txz) xz -dc "$1" | tar tvvf - >"$outfile";;
+	*.xz) xz -dc "$1" >"$outfile";;
+	*.tar) tar tvf "$1" --force-local >"$outfile";;
+	*.jar|*.war|*.xpi|*.zip) unzip -v "$1" >"$outfile";;
+	*.7z) 7za l "$1" >"$outfile";;
+	*)
+		for ext in $(bat -L | cut -d: -f2 | tr ',' ' '); do
+			trimmed="${1%$ext}"
+			# If the file *has an extension* and that extension matches, or if the *entire* filename matches, highlight it.
+			# This avoids cases where the filename ends with "d", but not with ".d", for instance.
+			if [ "$trimmed" = "${1%.*}." ] || [ "$trimmed" = "" ]; then
+				bat --paging never --color always --style plain --language "$ext" <"$1" >"$outfile"
+				break
+			fi
+		done
+		;;
+esac
+
+# If we produced any output, tell less about it.
+if [ -s "$outfile" ]; then
+	printf '%s\n' "$outfile"
+else
+	rm -f "$outfile"
+fi

@@ -1,0 +1,7 @@
+#!/usr/bin/env nix-script-bash
+#!runtimeInputs maim
+# vim: set ft=bash:
+# shellcheck shell=bash
+
+maim -d 0.1 -n 1 -u -lc 1,0.5,0,0.3 "$@"
+# TODO: split the screenshot into a file per screen

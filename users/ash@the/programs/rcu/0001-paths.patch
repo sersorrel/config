@@ -1,0 +1,630 @@
+diff --git a/src/__init__.py b/src/__init__.py
+new file mode 100644
+index 0000000..8b13789
+--- /dev/null
++++ b/src/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/src/controllers/ConnectionDialogController.py b/src/controllers/ConnectionDialogController.py
+index 8027e0a..6d565cd 100644
+--- a/src/controllers/ConnectionDialogController.py
++++ b/src/controllers/ConnectionDialogController.py
+@@ -21,11 +21,11 @@
+ '''
+ 
+ import socket
+-from worker import Worker
++from ..worker import Worker
+ import sys
+ import pathlib
+-import controllers
+-import log
++from .. import controllers
++from .. import log
+ from PySide2.QtCore import Qt, QSettings, QObject, QEvent, QPoint, \
+     QCoreApplication
+ from PySide2.QtWidgets import QMenu, QShortcut, QApplication, QAction, \
+@@ -224,7 +224,7 @@ def commit_settings(self):
+ 
+     
+ class ConnectionDialogController(controllers.UIController):
+-    ui_filename = pathlib.Path('views', 'ConnectionDialog.ui')
++    ui_filename = pathlib.Path('..', 'views', 'ConnectionDialog.ui')
+     
+     def __init__(self, model, threadpool):
+         super(type(self), self).__init__(model, threadpool)
+diff --git a/src/controllers/ConnectionErrorController.py b/src/controllers/ConnectionErrorController.py
+index 32b3e97..9588140 100644
+--- a/src/controllers/ConnectionErrorController.py
++++ b/src/controllers/ConnectionErrorController.py
+@@ -24,7 +24,7 @@
+ import pathlib
+ 
+ class ConnectionErrorController(UIController):
+-    ui_filename = pathlib.PurePath('views', 'ConnectionError.ui')
++    ui_filename = pathlib.PurePath('..', 'views', 'ConnectionError.ui')
+     
+     def __init__(self, parent_controller):
+         super(type(self), self).__init__(parent_controller.model,
+diff --git a/src/controllers/ConnectionUtilityController.py b/src/controllers/ConnectionUtilityController.py
+index f5a0abe..3792b31 100644
+--- a/src/controllers/ConnectionUtilityController.py
++++ b/src/controllers/ConnectionUtilityController.py
+@@ -23,10 +23,10 @@
+     QSettings, QTimer
+ from PySide2.QtWidgets import QListWidgetItem, QShortcut, QApplication
+ from PySide2.QtGui import QKeySequence, QPalette, QPixmap
+-from controllers import UIController
+-from panes import paneslist, IncompatiblePane
++from ..controllers import UIController
++from ..panes import paneslist, IncompatiblePane
+ import pathlib
+-import log
++from .. import log
+ 
+ PANEROLE = 420
+ 
+@@ -49,7 +49,7 @@ def eventFilter(self, obj, event):
+                 return False
+ 
+ class DroppedConnectionController(UIController):
+-    ui_filename = pathlib.PurePath('views', 'DroppedConnection.ui')
++    ui_filename = pathlib.PurePath('..', 'views', 'DroppedConnection.ui')
+ 
+     def __init__(self, parent_controller):
+         super(type(self), self).__init__(parent_controller.model,
+@@ -60,7 +60,7 @@ def __init__(self, parent_controller):
+         self.window.icon_label.setPixmap(icon)
+ 
+ class ConnectionUtilityController(UIController):
+-    ui_filename = pathlib.PurePath('views', 'ConnectionUtility.ui')
++    ui_filename = pathlib.PurePath('..', 'views', 'ConnectionUtility.ui')
+ 
+     def evaluate_cli_args(self, args):
+         # Ask each pane to process its CLI arguments, then exit.
+diff --git a/src/controllers/RecoveryOSController.py b/src/controllers/RecoveryOSController.py
+index 3ac9915..81112e9 100644
+--- a/src/controllers/RecoveryOSController.py
++++ b/src/controllers/RecoveryOSController.py
+@@ -22,11 +22,11 @@
+ 
+ from . import UIController
+ import pathlib
+-import log
++from .. import log
+ from PySide2.QtCore import QTimer
+ 
+ class RecoveryOSController(UIController):
+-    ui_filename = pathlib.PurePath('views', 'RecoveryOS.ui')
++    ui_filename = pathlib.PurePath('..', 'views', 'RecoveryOS.ui')
+     
+     def __init__(self, model, skip_windows=False):
+         super(type(self), self).__init__(model)
+diff --git a/src/controllers/UIController.py b/src/controllers/UIController.py
+index 3773e3a..74c89ad 100644
+--- a/src/controllers/UIController.py
++++ b/src/controllers/UIController.py
+@@ -23,7 +23,7 @@
+ import sys
+ from PySide2.QtCore import QFile, QCoreApplication
+ from PySide2.QtUiTools import QUiLoader
+-import log
++from .. import log
+ import re
+ 
+ class UIController:
+@@ -32,7 +32,7 @@ class UIController:
+     ui_filename = ''
+     # pyinstaller moves all datafiles into a tmp dir. This basepath
+     # can be overridden by a subclass, like third-party panes.
+-    ui_basepath = '.'
++    ui_basepath = pathlib.Path(__file__).parent
+     if hasattr(sys, '_MEIPASS'):
+         ui_basepath = sys._MEIPASS
+ 
+diff --git a/src/main.py b/src/main.py
+index 3fcf9b1..32f6196 100644
+--- a/src/main.py
++++ b/src/main.py
+@@ -32,15 +32,15 @@
+ 
+ # Give these to all our children
+ global worker
+-import worker
++from . import worker
+ global log
+-import log
++from . import log
+ global svgtools
+-import svgtools as svgtools
++from . import svgtools as svgtools
+ 
+-import model
+-from controllers import ConnectionDialogController
+-from panes import paneslist
++from .import model
++from .controllers import ConnectionDialogController
++from .panes import paneslist
+ 
+ 
+ from pathlib import Path
+@@ -114,7 +114,7 @@
+     
+ 
+ # Start main application
+-if __name__ == '__main__':
++def main():
+     QCoreApplication.setAttribute(Qt.AA_DisableWindowContextHelpButton)
+     QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
+     QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+@@ -127,7 +127,7 @@
+     QCoreApplication.args = args
+ 
+     # Version is now stored in version.txt
+-    ui_basepath = '.'
++    ui_basepath = Path(__file__).parent
+     if hasattr(sys, '_MEIPASS'):
+         ui_basepath = sys._MEIPASS
+     versiontxt = Path(Path(ui_basepath) / 'version.txt')
+diff --git a/src/model/battery.py b/src/model/battery.py
+index 9894cca..55538a2 100644
+--- a/src/model/battery.py
++++ b/src/model/battery.py
+@@ -19,7 +19,7 @@
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ '''
+ 
+-import log
++from .. import log
+ import time
+ 
+ class Battery:
+diff --git a/src/model/collection.py b/src/model/collection.py
+index 8bba2e0..c9095d6 100644
+--- a/src/model/collection.py
++++ b/src/model/collection.py
+@@ -19,7 +19,7 @@
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ '''
+ 
+-import log
++from .. import log
+ from datetime import datetime
+ import uuid
+ import json
+diff --git a/src/model/config.py b/src/model/config.py
+index 5de03d6..9933c9b 100644
+--- a/src/model/config.py
++++ b/src/model/config.py
+@@ -21,7 +21,7 @@
+ '''
+ 
+ import paramiko
+-import log
++from .. import log
+ from pathlib import Path
+ import json
+ from .transport import Transport
+diff --git a/src/model/display.py b/src/model/display.py
+index e10e008..47f2edf 100644
+--- a/src/model/display.py
++++ b/src/model/display.py
+@@ -44,7 +44,7 @@
+ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ '''
+ 
+-import log
++from .. import log
+ from PySide2.QtCore import QByteArray, QBuffer, QIODevice
+ from PySide2.QtGui import QImage, QMatrix
+ import math
+diff --git a/src/model/document.py b/src/model/document.py
+index eea7f06..adef770 100644
+--- a/src/model/document.py
++++ b/src/model/document.py
+@@ -20,15 +20,15 @@
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ '''
+ 
+-import log
++from .. import log
+ import tempfile
+ from datetime import datetime
+ import tarfile
+ from pathlib import Path
+-from model.template import Template
++from ..model.template import Template
+ import uuid
+ import json
+-from model import lines
++from ..model import lines
+ import gc
+ import shutil
+ import time
+@@ -46,7 +46,7 @@
+ from pdfrw import PdfReader, PdfWriter, PageMerge, PdfDict, PdfArray, PdfName, \
+     IndirectPdfDict, uncompress, compress
+ 
+-import svgtools
++from .. import svgtools
+ 
+ def rmdir(path):
+     if path.is_file() and path.exists():
+@@ -566,7 +566,7 @@ def cleanup():
+ 
+         # Load pencil textures (shared for brushes, takes a lot of time
+         # because there are many)
+-        from model.pens.textures import PencilTextures
++        from ..model.pens.textures import PencilTextures
+         pencil_textures = PencilTextures()
+ 
+         # This res_mod is the resolution modifier--users can set a
+@@ -1485,7 +1485,7 @@ def render_to_painter(self, painter, vector):
+             layer.render_to_painter(painter, vector)
+ 
+             
+-from model.pens import *
++from ..model.pens import *
+ class DocumentPageLayer:
+     pen_widths = []
+ 
+diff --git a/src/model/rcu.py b/src/model/rcu.py
+index b39c7e9..a5b4c1a 100644
+--- a/src/model/rcu.py
++++ b/src/model/rcu.py
+@@ -20,11 +20,11 @@
+ '''
+ 
+ from .config import Config
+-import log
++from .. import log
+ 
+ from PySide2.QtCore import QThreadPool, QSettings, QTimer
+ from PySide2.QtGui import QImage
+-from worker import Worker
++from ..worker import Worker
+ import select
+ import base64
+ from .template import Template
+diff --git a/src/model/template.py b/src/model/template.py
+index b31529b..b5775ab 100644
+--- a/src/model/template.py
++++ b/src/model/template.py
+@@ -21,15 +21,15 @@
+ 
+ # These need to be cleaned up -- not all these imports are required
+ from pathlib import Path
+-import log
++from .. import log
+ import json
+ from PySide2.QtCore import QByteArray
+-from worker import Worker
++from ..worker import Worker
+ import tempfile
+ import uuid
+ import tarfile
+ import zipfile
+-import svgtools
++from .. import svgtools
+ import os
+ 
+ 
+diff --git a/src/panes/about/__init__.py b/src/panes/about/__init__.py
+new file mode 100644
+index 0000000..8b13789
+--- /dev/null
++++ b/src/panes/about/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/src/panes/about/pane.py b/src/panes/about/pane.py
+index eab65a7..a0ca303 100644
+--- a/src/panes/about/pane.py
++++ b/src/panes/about/pane.py
+@@ -19,12 +19,12 @@
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ '''
+ 
+-import log
++from ... import log
+ from pathlib import Path
+-from controllers import UIController
++from ...controllers import UIController
+ import sys
+ 
+-from worker import Worker
++from ...worker import Worker
+ 
+ from PySide2.QtCore import QByteArray, QUrl, QSize, QCoreApplication
+ from PySide2.QtGui import QIcon
+diff --git a/src/panes/deviceinfo/BatteryInfoController.py b/src/panes/deviceinfo/BatteryInfoController.py
+index 6fc1ca5..fbda766 100644
+--- a/src/panes/deviceinfo/BatteryInfoController.py
++++ b/src/panes/deviceinfo/BatteryInfoController.py
+@@ -19,9 +19,9 @@
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ '''
+ 
+-import log
++from ... import log
+ 
+-from controllers import UIController
++from ...controllers import UIController
+ from pathlib import Path
+ 
+ class BatteryInfoController(UIController):
+diff --git a/src/panes/deviceinfo/__init__.py b/src/panes/deviceinfo/__init__.py
+new file mode 100644
+index 0000000..8b13789
+--- /dev/null
++++ b/src/panes/deviceinfo/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/src/panes/deviceinfo/backup/Backup.py b/src/panes/deviceinfo/backup/Backup.py
+index e3707a4..8c4aa26 100644
+--- a/src/panes/deviceinfo/backup/Backup.py
++++ b/src/panes/deviceinfo/backup/Backup.py
+@@ -25,7 +25,7 @@
+ import datetime
+ import json
+ from pathlib import Path
+-import log
++from .... import log
+ import time
+ import platform
+ import base64
+diff --git a/src/panes/deviceinfo/backup/BackupController.py b/src/panes/deviceinfo/backup/BackupController.py
+index cd70dc9..85c7164 100644
+--- a/src/panes/deviceinfo/backup/BackupController.py
++++ b/src/panes/deviceinfo/backup/BackupController.py
+@@ -23,7 +23,7 @@
+ import tempfile
+ import pathlib
+ from pathlib import Path
+-import log
++from .... import log
+ from .Backup import Backup
+ import json
+ from datetime import datetime
+diff --git a/src/panes/deviceinfo/backup/BackupFile.py b/src/panes/deviceinfo/backup/BackupFile.py
+index 97d395a..b011224 100644
+--- a/src/panes/deviceinfo/backup/BackupFile.py
++++ b/src/panes/deviceinfo/backup/BackupFile.py
+@@ -23,7 +23,7 @@
+ 
+ import hashlib
+ from pathlib import Path
+-import log
++from .... import log
+ 
+ class BackupFile:
+     # This is a single file contined inside of a backup.
+diff --git a/src/panes/deviceinfo/pane.py b/src/panes/deviceinfo/pane.py
+index 1c9a42b..ae838c9 100644
+--- a/src/panes/deviceinfo/pane.py
++++ b/src/panes/deviceinfo/pane.py
+@@ -21,9 +21,9 @@
+ 
+ from pathlib import Path
+ import math
+-import controllers
+-import log
+-from worker import Worker
++from ... import controllers
++from ... import log
++from ...worker import Worker
+ from . import backup
+ from PySide2.QtWidgets import QInputDialog, QLineEdit, QMessageBox
+ from PySide2.QtGui import QIcon, QPixmap
+diff --git a/src/panes/display/__init__.py b/src/panes/display/__init__.py
+new file mode 100644
+index 0000000..8b13789
+--- /dev/null
++++ b/src/panes/display/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/src/panes/display/pane.py b/src/panes/display/pane.py
+index 89f657c..d931813 100644
+--- a/src/panes/display/pane.py
++++ b/src/panes/display/pane.py
+@@ -25,9 +25,9 @@
+ from PySide2.QtWidgets import QFileDialog, QWidget
+ from pathlib import Path
+ from datetime import datetime
+-from controllers import UIController
+-from worker import Worker
+-import log
++from ...controllers import UIController
++from ...worker import Worker
++from ... import log
+ import gc
+ import ctypes
+ 
+diff --git a/src/panes/incompatible/__init__.py b/src/panes/incompatible/__init__.py
+new file mode 100644
+index 0000000..8b13789
+--- /dev/null
++++ b/src/panes/incompatible/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/src/panes/incompatible/pane.py b/src/panes/incompatible/pane.py
+index 53be52c..ffea41b 100644
+--- a/src/panes/incompatible/pane.py
++++ b/src/panes/incompatible/pane.py
+@@ -21,8 +21,8 @@
+ '''
+ 
+ from pathlib import Path
+-from controllers import UIController
+-import log
++from ...controllers import UIController
++from ... import log
+ from PySide2.QtGui import QPixmap
+ 
+ class IncompatiblePane(UIController):
+diff --git a/src/panes/notebooks/__init__.py b/src/panes/notebooks/__init__.py
+new file mode 100644
+index 0000000..8b13789
+--- /dev/null
++++ b/src/panes/notebooks/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/src/panes/notebooks/pane.py b/src/panes/notebooks/pane.py
+index 31c574b..753b156 100644
+--- a/src/panes/notebooks/pane.py
++++ b/src/panes/notebooks/pane.py
+@@ -19,12 +19,12 @@
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ '''
+ 
+-from controllers import UIController
++from ...controllers import UIController
+ from pathlib import Path
+-import log
+-from model.document import Document
+-from model.collection import Collection
+-from worker import Worker
++from ... import log
++from ...model.document import Document
++from ...model.collection import Collection
++from ...worker import Worker
+ import json
+ from datetime import datetime
+ import platform
+diff --git a/src/panes/software/__init__.py b/src/panes/software/__init__.py
+new file mode 100644
+index 0000000..8b13789
+--- /dev/null
++++ b/src/panes/software/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/src/panes/software/pane.py b/src/panes/software/pane.py
+index 468aff0..1057ea7 100644
+--- a/src/panes/software/pane.py
++++ b/src/panes/software/pane.py
+@@ -19,8 +19,8 @@
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ '''
+ 
+-import log
+-from controllers import UIController
++from ... import log
++from ...controllers import UIController
+ from pathlib import Path
+ from PySide2.QtCore import Qt, QSize, QRect, QSettings
+ from PySide2.QtGui import QIcon
+diff --git a/src/panes/splash/__init__.py b/src/panes/splash/__init__.py
+new file mode 100644
+index 0000000..8b13789
+--- /dev/null
++++ b/src/panes/splash/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/src/panes/splash/pane.py b/src/panes/splash/pane.py
+index a1ab00d..051001f 100644
+--- a/src/panes/splash/pane.py
++++ b/src/panes/splash/pane.py
+@@ -24,8 +24,8 @@
+ from PySide2.QtWidgets import QFileDialog
+ from pathlib import Path
+ from datetime import datetime
+-import log
+-from controllers import UIController
++from ... import log
++from ...controllers import UIController
+ 
+ class ResizeEventFilter(QObject):
+     def eventFilter(self, obj, event):
+diff --git a/src/panes/templates/__init__.py b/src/panes/templates/__init__.py
+new file mode 100644
+index 0000000..8b13789
+--- /dev/null
++++ b/src/panes/templates/__init__.py
+@@ -0,0 +1 @@
++
+diff --git a/src/panes/templates/importcontroller.py b/src/panes/templates/importcontroller.py
+index 296229c..0fad2ce 100644
+--- a/src/panes/templates/importcontroller.py
++++ b/src/panes/templates/importcontroller.py
+@@ -20,9 +20,9 @@
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ '''
+ 
+-from controllers import UIController
++from ...controllers import UIController
+ from pathlib import Path
+-import log
++from ... import log
+ 
+ from PySide2.QtCore import QByteArray, QSize, Qt, QTimer, QBuffer, \
+     QIODevice, QCoreApplication
+@@ -36,10 +36,10 @@
+ import io
+ import tempfile
+ 
+-from worker import Worker
+-import svgtools
++from ...worker import Worker
++from ... import svgtools
+ 
+-from model.template import Template
++from ...model.template import Template
+ 
+ 
+ def get_square_box(box):
+diff --git a/src/panes/templates/pane.py b/src/panes/templates/pane.py
+index bc76f2b..7214a44 100644
+--- a/src/panes/templates/pane.py
++++ b/src/panes/templates/pane.py
+@@ -19,9 +19,9 @@
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ '''
+ 
+-from controllers import UIController
++from ...controllers import UIController
+ from pathlib import Path
+-import log
++from ... import log
+ from PySide2.QtWidgets import QTreeWidgetItem, QTreeWidget, QMenu, \
+     QFrame, QAbstractItemView, QMessageBox, QHeaderView, QFileDialog, \
+     QSizePolicy
+@@ -29,11 +29,11 @@
+ from PySide2.QtCore import Qt, QRect, QByteArray, QSize, QObject, \
+     QEvent, QSettings, QCoreApplication
+ from PySide2.QtGui import QIcon
+-from model.template import Template
++from ...model.template import Template
+ import platform
+ import re
+ 
+-import svgtools
++from ... import svgtools
+ 
+ from .importcontroller import TemplateImporter
+ 
+diff --git a/src/rcu.py b/src/rcu.py
+new file mode 100755
+index 0000000..8ffaefd
+--- /dev/null
++++ b/src/rcu.py
+@@ -0,0 +1,8 @@
++#!/usr/bin/env python3
++
++from src.main import main
++import os
++
++if __name__ == "__main__":
++   os.chdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), "src"))
++   main()
+diff --git a/src/svgtools.py b/src/svgtools.py
+index 88a0c00..378a534 100644
+--- a/src/svgtools.py
++++ b/src/svgtools.py
+@@ -23,7 +23,7 @@
+ from PySide2.QtGui import QImage, QPainter, QPixmap
+ from PySide2.QtSvg import QSvgRenderer
+ 
+-import log
++from . import log
+ 
+ import os
+ 

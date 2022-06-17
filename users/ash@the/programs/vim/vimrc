@@ -1,0 +1,425 @@
+" Disable the vim-pythonsense keymaps, so we can enable just the docstring text object.
+let g:is_pythonsense_suppress_keymaps = 1
+
+" Disable the vim-gitgutter keymaps, we will enable the interesting ones ourselves.
+let g:gitgutter_map_keys = 0
+
+" Make CtrlP ignore files that Git ignores, when in a Git repository.
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+" When not in a Git repository, don't show uninteresting stuff.
+let g:ctrlp_custom_ignore = '\v\.(aux|fdb_latexmk|fls|mypy_cache)$'
+" Do show hidden files (when ctrlp_user_command doesn't apply).
+let g:ctrlp_show_hidden = 1
+
+" Stop vim-rooter echoing the working directory it's changing to.
+let g:rooter_silent_chdir = 1
+
+" Enable LaTeX math support in Markdown.
+let g:vim_markdown_math = 1
+" Highlight YAML and TOML frontmatter.
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_toml_frontmatter = 1
+" Don't automatically insert bulletpoints (it doesn't always behave properly).
+let g:vim_markdown_auto_insert_bullets = 0
+let g:vim_markdown_new_list_item_indent = 0
+" Disable automatic folding.
+let g:vim_markdown_folding_disabled = 1
+" Don't conceal code blocks.
+let g:vim_markdown_conceal_code_blocks = 0
+" Render strikethrough as strikethrough.
+let g:vim_markdown_strikethrough = 1
+
+" Stop pear-tree unpredictably erasing brackets, we don't care about repeating that much.
+let g:pear_tree_repeatable_expand = 0
+" Do be clever about maintaining balance.
+let g:pear_tree_smart_openers = 1
+let g:pear_tree_smart_closers = 1
+let g:pear_tree_smart_backspace = 1
+
+" Enable 24-bit colour support.
+if has('termguicolors')
+  set termguicolors
+endif
+
+" Set up custom colours for vim-buffet.
+function! s:gruvbox(x)
+  return synIDattr(hlID(a:x), 'fg')
+endfunction
+function! g:BuffetSetCustomColors()
+  exec 'hi! BuffetCurrentBuffer guifg='.s:gruvbox('GruvboxBg0').' guibg='.s:gruvbox('GruvboxFg4')
+  exec 'hi! BuffetActiveBuffer guifg='.s:gruvbox('GruvboxFg4').' guibg='.s:gruvbox('GruvboxBg2')
+  exec 'hi! BuffetBuffer guifg='.s:gruvbox('GruvboxFg4').' guibg='.s:gruvbox('GruvboxBg2')
+  hi! link BuffetModCurrentBuffer BuffetCurrentBuffer
+  hi! link BuffetModActiveBuffer BuffetActiveBuffer
+  hi! link BuffetModBuffer BuffetBuffer
+  exec 'hi! BuffetTrunc guifg='.s:gruvbox('GruvboxBg4').' guibg='.s:gruvbox('GruvboxBg1')
+  exec 'hi! BuffetTab guifg='.s:gruvbox('GruvboxBg2').' guibg='.s:gruvbox('GruvboxBlue')
+endfunction
+
+" Use the gruvbox colourscheme.
+let g:gruvbox_italic = 1
+let g:gruvbox_undercurl = 0
+let g:gruvbox_guisp_fallback = 'bg'
+let g:gruvbox_contrast_light = 'hard'
+colorscheme gruvbox
+
+" Highlight highlighted columns with a dark grey background.
+highlight ColorColumn ctermbg=darkgrey ctermfg=white
+
+" Unmap F1 to avoid accidentally opening the help pages.
+nnoremap <F1> <nop>
+inoremap <F1> <nop>
+
+" Buffer-switching keybinds.
+" NB: mapping <tab> in normal mode breaks ctrl-I!
+nnoremap <S-Tab> :bn<CR>
+nnoremap gb :bn<CR>
+nnoremap gB :bp<CR>
+nnoremap <c-left> :bp<CR>
+nnoremap <c-right> :bn<CR>
+nnoremap <c-q> :bd<CR>
+
+" Window-switching keybinds.
+nnoremap <silent> <c-h> <c-w><c-h>
+nnoremap <silent> <c-j> <c-w><c-j>
+nnoremap <silent> <c-k> <c-w><c-k>
+nnoremap <silent> <c-l> <c-w><c-l>
+
+" Slimmed-down and modified mappings from vim-gitgutter.
+nmap ]h <plug>(GitGutterNextHunk)
+nmap [h <plug>(GitGutterPrevHunk)
+nmap <leader>hs <plug>(GitGutterStageHunk)
+nmap <leader>hu <plug>(GitGutterUndoHunk)
+omap ih <Plug>(GitGutterTextObjectInnerPending)
+omap ah <Plug>(GitGutterTextObjectOuterPending)
+xmap ih <Plug>(GitGutterTextObjectInnerVisual)
+xmap ah <Plug>(GitGutterTextObjectOuterVisual)
+
+" Get rid of the easy accidental entrypoints into ex mode.
+nnoremap q: <nop>
+nnoremap q/ <nop>
+nnoremap q? <nop>
+nnoremap Q <nop>
+
+" Cancel search highlighting on <CR>.
+nnoremap <silent> <CR> :noh<CR>
+
+" Don't unselect the selection when changing indentation in visual mode.
+xnoremap < <gv
+xnoremap > >gv
+
+" j and k move vertically by visual line.
+" Normal mode
+nnoremap j gj
+nnoremap k gk
+" Visual mode
+vnoremap j gj
+vnoremap k gk
+" Operator-pending mode (e.g. after d or c)
+onoremap j gj
+onoremap k gk
+" ...as do arrow keys.
+" Normal, visual and operator-pending modes
+nnoremap <Down> gj
+nnoremap <Up> gk
+vnoremap <Down> gj
+vnoremap <up> gk
+onoremap <Down> gj
+onoremap <up> gk
+" Insert mode
+inoremap <Down> <C-o>gj
+inoremap <Up> <C-o>gk
+
+" gV selects the text you just inserted.
+nnoremap gV `[v`]
+
+" <leader>w toggles tw between 0, 80, 79, and 72.
+nnoremap <silent> <leader>w :call <SID>change_width()<CR>:set tw?<CR>
+fun! s:change_width() abort
+  if &tw == 72
+    let &tw = 0
+  elseif &tw == 79
+    let &tw = 72
+  elseif &tw == 80
+    let &tw = 79
+  else
+    let &tw = 80
+  endif
+endfun
+
+" \dd and \do toggle a diff of the buffer and the file on disk.
+nnoremap <silent> <leader>dd :Diff<CR>
+nnoremap <silent> <leader>do :Doff<CR>
+" Show a diff between the buffer and the file on disk.
+let s:diffwin = -1
+fun! Diff() abort
+  if !filereadable(expand('%'))
+    echo 'File does not exist on disk!'
+    return
+  endif
+  if &diff
+    return
+  endif
+  let l:filetype = &filetype
+  leftabove vertical new
+  let s:diffwin = win_getid()
+  set buftype=nofile
+  set bufhidden=wipe
+  let &filetype = l:filetype
+  read #
+  0d_
+  diffthis
+  wincmd p
+  diffthis
+endfunction
+function! Doff() abort
+  let l:win = win_getid()
+  if !win_gotoid(s:diffwin)
+    return
+  endif
+  if !&diff
+    return
+  endif
+  close
+  if l:win != s:diffwin
+    if !win_gotoid(l:win)
+      echoerr 'Original window does not exist'
+    endif
+  endif
+  diffoff
+endfunction
+command Diff call Diff()
+command Doff call Doff()
+
+" Don't redraw in the middle of commands.
+set lazyredraw
+
+" Sentences are separated by one space.
+set cpo-=J
+set nojoinspaces
+
+" Allow moving past EOL in visual block mode.
+set virtualedit=block
+
+" Write to swap files earlier (and show vim-gitgutter markers sooner).
+set updatetime=400
+
+" Don't show the intro screen or completion messages.
+set shortmess+=Ic
+
+" Autocomplete more like Bash (complete longest prefix and show a list when ambigous).
+set wildmode=list:longest
+
+" Don't autocomplete unuseful files.
+set wildignore+=*.py[cod],*.egg-info,__pycache__/,*.sw?
+
+" Always keep at least 5 lines visible around the cursor.
+set scrolloff=5
+
+" Wait no longer than 10ms for a keycode to arrive.
+set ttimeoutlen=10
+
+" Don't ring the bell unless it's important.
+set belloff=esc
+
+" Ignore case in searches.
+set ignorecase
+" Only ignore case in searches when pattern is all-lowercase.
+set smartcase
+" Highlight search matches.
+set hlsearch
+
+" vim-crystalline gubbins
+function! StatusLine(current, width)
+  let l:s = ''
+  if a:current
+    let l:s .= crystalline#mode() . crystalline#right_mode_sep('')
+  else
+    let l:s .= '%#CrystallineInactive#'
+  endif
+  let l:s .= ' %f%h%w%m%r '
+  if a:current
+    let l:s .= crystalline#right_sep('', 'Fill') . ' %{FugitiveHead()}'
+  endif
+  let l:s .= '%='
+  if a:current
+    let l:s .= crystalline#left_sep('', 'Fill') . ' %{&paste ?"PASTE ":""}%{&spell?"SPELL ":""}'
+    let l:s .= crystalline#left_mode_sep('')
+  endif
+  if a:width > 80
+    let l:s .= ' %{&ft}[%{&fenc!=#""?&fenc:&enc}][%{&ff}] %l/%L %c%V %P '
+  else
+    let l:s .= ' '
+  endif
+  return l:s
+endfunction
+function! TabLine()
+  let l:vimlabel = has('nvim') ?  ' NVIM ' : ' VIM '
+  return crystalline#bufferline(2, len(l:vimlabel), 1) . '%=%#CrystallineTab# ' . l:vimlabel
+endfunction
+let g:crystalline_enable_sep = 1
+let g:crystalline_statusline_fn = 'StatusLine'
+let g:crystalline_tabline_fn = 'TabLine'
+let g:crystalline_theme = 'gruvbox'
+set showtabline=2
+set guioptions-=e
+set laststatus=2
+
+" Persist indent of the current line when pressing enter.
+set autoindent
+" Snap to multiples of shiftwidth when indenting.
+set shiftround
+
+" Highlight the line the cursor is on.
+set cursorline
+
+" Show line numbers.
+set number
+set numberwidth=5
+
+" Don't show the current mode (vim-crystalline does this).
+set noshowmode
+
+" Always show the sign column.
+if has('signs')
+  set signcolumn=yes
+endif
+
+" Soft wrap at words.
+set linebreak
+
+" Show the current file in the terminal title.
+set title
+set titleold=
+
+" Highlight the column after tw by default.
+set cc=+1
+
+" Enable conceal, even when on the same line.
+set conceallevel=2
+set concealcursor=nvc
+
+" Show some whitespace/virtual characters, per lcs.
+set list
+
+" Put an arrow in front of lines that wrap around.
+let &showbreak='↪ '
+
+" Avoid trying to highlight extremely long lines.
+set synmaxcol=999
+
+" Highlight all trailing whitespace except when editing at the end of a line.
+" Based on <http://vim.wikia.com/wiki/Highlight_unwanted_spaces>.
+" The important bits of this pattern:
+" \%#  : cursor position
+" \@<! : assert no match of previous (negative lookbehind)
+"        /\(abc\)\@<!def/ matches 'def' not preceded by 'abc'.
+" $    : eol
+" We use matchadd() rather than :match in order to increase the priority to 11
+" (the default is 10), so that trailing whitespace is never overshadowed by
+" anything else.
+highlight TrailingWhitespace ctermbg=red guibg=red
+au WinEnter * if exists('w:trail_match') | silent! call matchdelete(w:trail_match) | endif | let w:trail_match = matchadd('TrailingWhitespace', '\s\+$', 11)
+au InsertEnter * if exists('w:trail_match') | silent! call matchdelete(w:trail_match) | endif | let w:trail_match = matchadd('TrailingWhitespace', '\s\+\%#\@<!$', 11)
+au InsertLeave * if exists('w:trail_match') | silent! call matchdelete(w:trail_match) | endif | let w:trail_match = matchadd('TrailingWhitespace', '\s\+$', 11)
+
+" Use different cursors depending on the mode.
+" Requires DECSCUSR support (gnome-terminal/VTE has support since VTE 0.39).
+" Alacritty also has support, but Vim can't tell even when the terminfo is set
+" up correctly, because Vim uses termcap instead of terminfo, and 24-bit
+" colour info doesn't fit into termcap.
+" Kitty likewise.
+if !empty($VTE_VERSION) && str2nr($VTE_VERSION) > 3900 || $TERM == 'alacritty' || !empty($ALACRITTY_LOG) || $TERM == 'xterm-kitty'
+  let &t_SI = "\<esc>[5 q"  " blinking I-beam in insert mode
+  let &t_SR = "\<esc>[3 q"  " blinking underline in replace mode
+  let &t_EI = "\<esc>[ q"  " default cursor (usually blinking block) otherwise
+endif
+
+" Alacritty and kitty behave mostly like xterm, but Vim doesn't know that.
+if $TERM == 'alacritty' || $TERM == 'xterm-kitty'
+  " 24-bit colour
+  let &t_8b = "\<esc>[48;2;%lu;%lu;%lum"
+  let &t_8f = "\<esc>[38;2;%lu;%lu;%lum"
+  " Bracketed paste
+  let &t_BE = "\<esc>[?2004h"
+  let &t_BD = "\<esc>[?2004l"
+  " Strikethrough
+  let &t_Ts = "\<esc>[9m"
+  let &t_Te = "\<esc>[29m"
+  " Request terminal version string (makes cursor keys work in CtrlP)
+  let &t_RV = "\<esc>[>c"
+endif
+
+" Tell vim to work with UTF-8 internally.
+set encoding=utf-8
+" Save files as UTF-8.
+set fileencoding=utf-8
+" Try these encodings when opening files.
+set fileencodings=utf-8,latin1,shift-jis
+
+" Create missing directories on save.
+" This allows creating files in directories that don't exist yet --
+" potentially dangerous, but mostly useful.
+" From https://stackoverflow.com/a/4294176/5951320
+fun! s:CreateNonexistentDirs(file, buf) abort
+  if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+    let dir=fnamemodify(a:file, ':h')
+    if !isdirectory(dir)
+      call mkdir(dir, 'p')
+    endif
+  endif
+endfun
+augroup BWCCreateDir
+  au!
+  au BufWritePre * :call s:CreateNonexistentDirs(expand('<afile>'), +expand('<abuf>'))
+augroup end
+
+" Make :Q an alias for :qa.
+command -bang Q qa
+
+" Automatically reload files that were changed on disk (if not modified)
+augroup file_changes
+  au!
+  " Don't run if in command-line mode.
+  " <https://unix.stackexchange.com/a/383044/226269>
+  au FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
+augroup end
+
+" Enable modelines.
+set modeline
+set modelines=5
+
+" Allow switching buffers with unsaved work.
+set hidden
+
+" Enable spell-checking support.
+set spellfile=$HOME/.vim/spell/general.utf-8.add
+set spelllang=en_gb
+
+" Stop the cursor blinking in gvim.
+set guicursor+=a:blinkon0
+" Hide the menu and toolbar.
+set guioptions-=m
+set guioptions-=T
+" Use a nicer font than the default.
+set guifont=Iosevka\ 10
+" Match Kitty's line spacing.
+set linespace=2
+
+if has('gui_running')
+  " Paste with ctrl-shift-v (since gvim can use ctrl-shift!)
+  noremap <C-S-v> <C-r><C-o>+
+  inoremap <C-S-v> <C-r><C-o>+
+  xnoremap <C-S-c> "+y
+
+  " Highlight occurrences of the selected word on double-click
+  " https://vim.fandom.com/wiki/Highlight_all_search_pattern_matches
+  function! s:makepattern(text)
+    let pat = escape(a:text, '\')
+    let pat = substitute(pat, '\_s\+$', '\\s\\*', '')
+    let pat = substitute(pat, '^\_s\+', '\\s\\*', '')
+    let pat = substitute(pat, '\_s\+',  '\\_s\\+', 'g')
+    return '\\V' . escape(pat, '\"')
+  endfunction
+  noremap <2-LeftMouse> <2-LeftMouse>:<c-u>let @/="<C-R>=<SID>makepattern(@*)<CR>"<CR>:set hls<CR>
+endif

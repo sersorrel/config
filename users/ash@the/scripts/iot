@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+set -e
+
+usage() {
+	printf 'Usage: %s DEVICE STATE\n' "$(basename "$0")" >&2
+	exit 1
+}
+
+if [ $# -lt 1 ] || [ $# -gt 2 ]; then
+	usage
+fi
+
+if [ -f ~/Secrets/iot.secrets ]; then
+	. ~/Secrets/iot.secrets
+else
+	echo 'secrets not available' >&2
+	exit 1
+fi
+
+case $1 in
+	big-lamp) url=$big_lamp_url;;
+	small-lamp) url=$small_lamp_url;;
+	heater) url=$heater_url;;
+	*) usage;;
+esac
+
+f() {
+	case $2 in
+		0|off) state=0;;
+		1|on) state=1;;
+		2|toggle) return;;
+		*) printf 'misuse of f' >&2; exit 2;;
+	esac
+	printf '/tmp/temps-%s-%s' "$1" "$state"
+}
+
+case $2 in
+	0|off) state=0;;
+	1|on) state=1;;
+	2|toggle) state=2;;
+	"") if [ -e "$(f "$1" on)" ] || [ -e "$(f "$1" off)" ]
+		then if [ "$(f "$1" on)" -nt "$(f "$1" off)" ]
+			then printf 'on\n'
+			else printf 'off\n'
+			fi
+		else printf 'unknown\n'; fi; exit;;
+	*) usage;;
+esac
+
+curl -sS "$url/$state"
+
+touch "$(f "$1" "$2")" || true

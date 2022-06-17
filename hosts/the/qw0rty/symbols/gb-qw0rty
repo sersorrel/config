@@ -1,0 +1,17 @@
+xkb_symbols "gb-qw0rty"
+{
+    include "gb(basic)"
+
+    name[Group1]="English (UK) (qworty)";
+
+    key <AE01>  { [         0,     exclam,  onesuperior,   exclamdown ] };
+    key <AE02>  { [         1,   quotedbl,  twosuperior,    oneeighth ] };
+    key <AE03>  { [         2,   sterling, threesuperior,    sterling ] };
+    key <AE04>  { [         3,     dollar,     EuroSign,   onequarter ] };
+    key <AE05>  { [         4,    percent,      onehalf, threeeighths ] };
+    key <AE06>  { [         5, asciicircum, threequarters, fiveeighths ] };
+    key <AE07>  { [         6,  ampersand,    braceleft, seveneighths ] };
+    key <AE08>  { [         7,   asterisk,  bracketleft,    trademark ] };
+    key <AE09>  { [         8,  parenleft, bracketright,    plusminus ] };
+    key <AE10>  { [         9, parenright,   braceright,       degree ] };
+};

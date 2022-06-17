@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+echo 'export LESSOPEN="janus-open %s"'
+echo 'export LESSCLOSE="janus-close %s %s"'

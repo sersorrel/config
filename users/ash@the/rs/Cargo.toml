@@ -1,0 +1,8 @@
+[package]
+name = "rs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+i3_ipc = "0.14.0"
+nix = "0.23.1"

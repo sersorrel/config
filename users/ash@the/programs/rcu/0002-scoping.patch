@@ -1,0 +1,33 @@
+diff --git a/src/main.py b/src/main.py
+index 3fcf9b1..4cf1347 100644
+--- a/src/main.py
++++ b/src/main.py
+@@ -217,17 +217,17 @@
+     app.setPalette(palette)
+ 
+     # The model and threadpool are distributed to all panes.
+-    model = model.RCU(QCoreApplication)
++    model_ = model.RCU(QCoreApplication)
+     threadpool = QThreadPool()
+ 
+     # Skip main application for rendering RMN to PDF. Use dummy docs.
+     if args.render_rmn_pdf_b or args.render_rmn_pdf_v:
+         from model.document import Document
+         from model.display import DisplayRM
+-        model.display = DisplayRM(model)
++        model_.display = DisplayRM(model_)
+         
+         arg = args.render_rmn_pdf_b or args.render_rmn_pdf_v
+-        doc = Document(model)
++        doc = Document(model_)
+         doc.use_local_archive = arg[0]
+         # no connection
+         if doc.save_pdf(arg[1], vector=args.render_rmn_pdf_v):
+@@ -235,6 +235,6 @@
+         else:
+             sys.exit(1)
+     
+-    connection_dialog = ConnectionDialogController(model,
++    connection_dialog = ConnectionDialogController(model_,
+                                                    threadpool)
+     sys.exit(app.exec_())

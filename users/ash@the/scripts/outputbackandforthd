@@ -1,0 +1,34 @@
+#!/usr/bin/env nix-script
+#!build cp $SRC $OUT
+#!runtimeInputs python310
+#!interpreter python
+# vim: set ft=python:
+
+import json
+import os
+import shutil
+import subprocess
+from pathlib import Path
+
+UID = os.getuid()
+DIR = Path(f"/var/run/user/{UID}/i3outputbackandforthd")
+
+if DIR.exists():
+    shutil.rmtree(DIR)
+DIR.mkdir()
+
+with subprocess.Popen(
+    ["i3-msg", "-t", "subscribe", "-m", '["workspace"]'],
+    stdout=subprocess.PIPE,
+    bufsize=1,
+    text=True,
+) as p:
+    for line in p.stdout:
+        data = json.loads(line)
+        if data["change"] != "focus" or data["old"] is None:
+            continue
+        old_output = data["old"]["output"]
+        current_output = data["current"]["output"]
+        if old_output != current_output and old_output is not None:
+            with open(DIR / "old", "w") as f:
+                f.write(old_output)

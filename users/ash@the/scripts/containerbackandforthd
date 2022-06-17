@@ -1,0 +1,38 @@
+#!/usr/bin/env nix-script
+#!build cp $SRC $OUT
+#!runtimeInputs python310
+#!interpreter python
+# vim: set ft=python:
+
+import json
+import os
+import shutil
+import subprocess
+from pathlib import Path
+
+UID = os.getuid()
+DIR = Path(f"/var/run/user/{UID}/i3containerbackandforthd")
+
+if DIR.exists():
+    shutil.rmtree(DIR)
+DIR.mkdir()
+
+with subprocess.Popen(
+    ["i3-msg", "-t", "subscribe", "-m", '["window"]'],
+    stdout=subprocess.PIPE,
+    bufsize=1,
+    text=True,
+) as p:
+    for line in p.stdout:
+        data = json.loads(line)
+        if data["change"] != "focus":
+            continue
+        new_window_id = data["container"]["id"]
+        if new_window_id is not None:
+            try:
+                with open(DIR / "history") as f:
+                    lines = f.readlines()
+            except Exception:
+                lines = []
+            with open(DIR / "history", "w") as f:
+                f.writelines(([str(new_window_id) + "\n"] + lines)[:10])
