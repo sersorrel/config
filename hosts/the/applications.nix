@@ -66,5 +66,7 @@
 
   services.gvfs.enable = true;
 
+  services.tumbler.enable = true;
+
   services.upower.enable = true;
 }
