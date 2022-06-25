@@ -6,8 +6,8 @@
     maxJobs = 3; # simultaneous builds
     settings.experimental-features = [ "nix-command" "flakes" ];
     registry = {
-      system-nixpkgs.flake = inputs.nixpkgs;
-      system-nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
+      nixpkgs.flake = inputs.nixpkgs;
+      nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
     };
   };
   nixpkgs = {

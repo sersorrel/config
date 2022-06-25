@@ -2,8 +2,8 @@
 
 {
   nix.registry = {
-    user-nixpkgs.flake = inputs.nixpkgs;
-    user-nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
+    nixpkgs.flake = inputs.nixpkgs;
+    nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
     secrets.to = { type = "path"; path = toString ~/Secrets; };
   };
 
