@@ -4,6 +4,7 @@
     ./any-nix-shell.nix
     ./bash.nix
     ./bat.nix
+    ./binary-ninja
     ./bintools.nix
     ./brightnessctl.nix
     ./calculator.nix
