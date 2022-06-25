@@ -56,6 +56,7 @@
     ./libreoffice.nix
     ./lorri.nix
     ./lsof.nix
+    ./lutris.nix
     ./lyx.nix
     ./make.nix
     ./mpv.nix

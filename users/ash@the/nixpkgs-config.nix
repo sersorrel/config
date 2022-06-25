@@ -7,6 +7,8 @@
     "insync"
     "obsidian"
     "slack"
+    "steam"
+    "steam-original"
     "talon"
     "talon-beta"
     "todoist-electron"
