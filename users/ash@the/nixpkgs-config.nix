@@ -9,6 +9,7 @@
     "slack"
     "steam"
     "steam-original"
+    "sublime-merge"
     "talon"
     "talon-beta"
     "todoist-electron"
