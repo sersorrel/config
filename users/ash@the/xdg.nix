@@ -21,6 +21,9 @@
         "text/x-makefile" = "vim.desktop";
         "text/x-python" = "vim.desktop";
         "x-scheme-handler/kdeconnect" = "nemo.desktop";
+        "text/x-python3" = "vim.desktop";
+        "application/epub+zip" = "calibre-ebook-viewer.desktop";
+        "application/zip" = "org.gnome.FileRoller.desktop";
       };
       associations.removed = {
         "audio/mp4" = "org.kde.kid3-qt.desktop";
