@@ -4,6 +4,7 @@ let
   fa-bluetooth-b = builtins.fromJSON ''"\uF294"'';
   fa-headphones = builtins.fromJSON ''"\uF025"'';
   fa-microphone-slash = builtins.fromJSON ''"\uF131"'';
+  fa-bell-slash = builtins.fromJSON ''"\uF1F6"'';
   fa-sync = builtins.fromJSON ''"\uF021"'';
   fa-times = builtins.fromJSON ''"\uF00D"'';
   fa-tv = builtins.fromJSON ''"\uF26C"'';
@@ -86,6 +87,13 @@ in
           {
             block = "custom";
             command = "systemctl --quiet is-active borgbackup-job-persist.service && printf '${fa-sync}'";
+            hide_when_empty = true;
+            shell = "sh";
+          }
+          {
+            block = "custom";
+            command = ''if [ "$(dunstctl is-paused)" = "true" ]; then printf '${fa-bell-slash}'; fi'';
+            on_click = "dunstctl set-paused false";
             hide_when_empty = true;
             shell = "sh";
           }
