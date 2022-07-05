@@ -1,5 +1,13 @@
 { inputs, lib, ... }:
 
+let
+  channelPaths = let
+    base = "/etc/nixpkgs/channels";
+  in {
+    nixpkgs = "${base}/nixpkgs";
+    nixpkgs-unstable = "${base}/nixpkgs-unstable";
+  };
+in
 {
   nix = {
     buildCores = 3; # cores per build
@@ -9,6 +17,9 @@
       nixpkgs.flake = inputs.nixpkgs;
       nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
     };
+    # https://discourse.nixos.org/t/do-flakes-also-set-the-system-channel/19798/2
+    # see also systemd.tmpfiles.rules below
+    nixPath = lib.mapAttrsToList (name: value: "${name}=${value}") channelPaths;
   };
   nixpkgs = {
     config = {
@@ -51,4 +62,5 @@
       })
     ];
   };
+  systemd.tmpfiles.rules = lib.mapAttrsToList (name: value: "L+ ${value} - - - - ${inputs.${name}}") channelPaths;
 }
