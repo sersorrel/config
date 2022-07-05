@@ -7,13 +7,16 @@
   inputs.nix-script.url = "github:BrianHicks/nix-script";
   inputs.nix-script.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
+  # https://discourse.nixos.org/t/do-flakes-also-set-the-system-channel/19798/6
+  inputs.nixos-channel.url = "https://nixos.org/channels/nixos-22.05/nixexprs.tar.xz";
+
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
 
   inputs.nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   inputs.secrets.url = "secrets";
 
-  outputs = { self, home-manager, nix-script, nixpkgs, nixpkgs-unstable, secrets } @ inputs: let
+  outputs = { self, home-manager, nix-script, nixos-channel, nixpkgs, nixpkgs-unstable, secrets } @ inputs: let
     inherit (nixpkgs.lib) filterAttrs nameValuePair;
     asciiLower = "abcdefghijklmnopqrstuvwxyz";
     asciiUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

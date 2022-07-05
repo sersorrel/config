@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   # don't clobber users' shell functions!
@@ -37,6 +37,10 @@
   documentation.dev.enable = true;
 
   programs.adb.enable = true;
+
+  programs.command-not-found.dbPath = pkgs.runCommandLocal "command-not-found-database" {} ''
+    cp ${inputs.nixos-channel}/programs.sqlite $out
+  '';
 
   programs.dconf.enable = true;
 
