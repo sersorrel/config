@@ -31,6 +31,7 @@
     shadowExclude = [
       "class_g = 'i3-frame'"
       "class_g = 'i3bar'"
+      "class_g = 'flameshot'"
       "_NET_WM_STATE@[*]:a *?= '_NET_WM_STATE_HIDDEN'" # windows in unselected tabs
     ];
     settings.xinerama-shadow-crop = true;
