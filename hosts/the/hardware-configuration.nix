@@ -44,12 +44,6 @@
       options = [ "bind" ];
     };
 
-  fileSystems."/etc/nixos" =
-    { device = "/persist/etc/nixos";
-      fsType = "none";
-      options = [ "bind" ];
-    };
-
   fileSystems."/home" =
     { device = "/persist/home";
       fsType = "none";
