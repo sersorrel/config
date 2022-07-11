@@ -6,6 +6,7 @@ let
   in {
     nixpkgs = "${base}/nixpkgs";
     nixpkgs-unstable = "${base}/nixpkgs-unstable";
+    home-manager = "${base}/home-manager";
   };
 in
 {
