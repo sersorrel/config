@@ -97,6 +97,7 @@ bindsym $textier+i exec --no-startup-id "pactl set-source-mute @DEFAULT_SOURCE@ 
 # keyboard media controls
 bindsym XF86AudioPrev exec --no-startup-id playerctl --player playerctld previous
 bindsym XF86AudioPlay exec --no-startup-id playerctl --player playerctld play-pause
+bindsym XF86AudioPause exec --no-startup-id playerctl --player playerctld play-pause
 bindsym XF86AudioNext exec --no-startup-id playerctl --player playerctld next
 
 # keyboard brightness controls
