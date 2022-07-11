@@ -104,6 +104,7 @@
         wraps = "mkdir";
         body = "mkdir -p -- $argv[1] && cd -- $argv[1]";
       };
+      nix-meta = "nix eval --json $argv[1].meta | jq 'del(.platforms)'";
       now = "date +%s";
       oops = "history delete --exact --case-sensitive -- $history[1]";
       rm = {
