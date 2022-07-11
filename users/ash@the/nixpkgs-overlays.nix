@@ -39,6 +39,11 @@
         ./patches/kitty-0001-sound-theme.patch
       ];
     });
+    rink = super.rink.overrideAttrs (old: {
+      patches = (old.patches or []) ++ [
+        ./patches/rink-0001-change-date-formats.patch
+      ];
+    });
   })
   (self: super: {
     some = super.rustPlatform.buildRustPackage {
