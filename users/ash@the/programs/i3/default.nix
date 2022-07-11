@@ -3,6 +3,7 @@
 let
   fa-bluetooth-b = builtins.fromJSON ''"\uF294"'';
   fa-headphones = builtins.fromJSON ''"\uF025"'';
+  fa-microphone = builtins.fromJSON ''"\uF130"'';
   fa-microphone-slash = builtins.fromJSON ''"\uF131"'';
   fa-bell-slash = builtins.fromJSON ''"\uF1F6"'';
   fa-sync = builtins.fromJSON ''"\uF021"'';
@@ -99,9 +100,8 @@ in
           }
           {
             block = "custom";
-            command = ''pacmd dump | rg -q "set-source-mute $(pacmd dump | rg -or '$1' 'set-default-source (.+)$') yes" && printf '${fa-microphone-slash}';'';
-            on_click = "pactl set-source-mute @DEFAULT_SOURCE@ toggle";
-            hide_when_empty = true;
+            command = ''if ${pkgs.pulseaudio}/bin/pactl get-source-mute @DEFAULT_SOURCE@ | grep -qF "Mute: yes"; then printf '${fa-microphone-slash}'; else printf '${fa-microphone}'; fi'';
+            on_click = "${pkgs.pulseaudio}/bin/pactl set-source-mute @DEFAULT_SOURCE@ toggle";
             shell = "sh";
           }
           {
