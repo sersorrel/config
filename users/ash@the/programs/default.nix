@@ -91,6 +91,7 @@
     ./syncthing.nix
     ./systemd.nix
     ./talon
+    ./tenacity.nix
     ./thunar.nix
     ./tio.nix
     ./todoist.nix
