@@ -362,7 +362,7 @@ mode $mode_bluetooth {
 }
 bindsym $mod+b mode $mode_bluetooth
 
-set $transparent #ffffff88
+set $transparent #ffffff00
 set $translucent #28282855
 bar {
         i3bar_command exec i3bar -t
@@ -380,7 +380,7 @@ bar {
                 # class            border        bg            text
                 focused_workspace  $qgreen       $qgreen       $fg
                 active_workspace   $bg1          $bg1          $fg
-                inactive_workspace $transparent  $transparent  $fg0
+                inactive_workspace $transparent  $transparent  $bg0
                 urgent_workspace   $qorange      $qorange      $fg
                 background $transparent
         }

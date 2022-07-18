@@ -26,7 +26,7 @@ mid=88
 ish=33
 trans=00
 
-wallpaper=~/.background-image
+wallpaper=~/.background-image-lockscreen-base
 lockscreen=~/.background-image-lockscreen
 overlay=~/.background-image-lockscreen-overlay
 

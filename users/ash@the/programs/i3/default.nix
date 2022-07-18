@@ -64,11 +64,12 @@ in
           theme = {
             name = "gruvbox-light";
             overrides = {
-              idle_bg = "#FFFFFF88";
-              info_bg = "#FFFFFF88";
-              good_bg = "#FFFFFF88";
-              info_fg = "#3C3836FF";
-              good_fg = "#3C3836FF";
+              idle_bg = "#FFFFFF00";
+              info_bg = "#FFFFFF00";
+              good_bg = "#FFFFFF00";
+              idle_fg = "#FBF1C7FF";
+              info_fg = "#FBF1C7FF";
+              good_fg = "#FBF1C7FF";
               alternating_tint_bg = "#00000000";
               warning_fg = "#FBF1C7FF";
               separator = "";
