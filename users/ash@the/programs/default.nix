@@ -73,6 +73,7 @@
     ./playerctl.nix
     ./pngcrush.nix
     ./polymc.nix
+    ./qpwgraph.nix
     ./qutebrowser.nix
     ./rcu
     ./readline.nix

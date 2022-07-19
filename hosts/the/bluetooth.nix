@@ -2,11 +2,10 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
-  # Disable HSP (since we don't have oFono): https://gitlab.freedesktop.org/pulseaudio/pulseaudio/-/issues/1149
-  hardware.pulseaudio.extraConfig = ''
-    .ifexists module-bluetooth-discover.so
-    unload-module module-bluetooth-discover
-    load-module module-bluetooth-discover headset=ofono
-    .endif
+  # Don't automatically switch to HFP/HSP when something starts recording.
+  environment.etc."wireplumber/policy.lua.d/51-bluetooth-policy.lua".text = ''
+    bluetooth_policy.policy = {
+      ["media-role.use-headset-profile"] = false,
+    }
   '';
 }
