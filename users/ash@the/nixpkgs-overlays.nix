@@ -42,6 +42,7 @@
     rink = super.rink.overrideAttrs (old: {
       patches = (old.patches or []) ++ [
         ./patches/rink-0001-change-date-formats.patch
+        ./patches/rink-0002-amp-hour.patch
       ];
     });
   })
