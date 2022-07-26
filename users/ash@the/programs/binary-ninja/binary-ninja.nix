@@ -9,6 +9,7 @@
 , makeDesktopItem
 , makeWrapper
 , ncurses6
+, python310
 , requireFile
 , unzip
 , xorg
@@ -65,6 +66,10 @@ stdenv.mkDerivation {
     mkdir -p $out/opt
     cp -r * $out/opt
     chmod +x $out/opt/binaryninja
+
+    # https://github.com/Vector35/binaryninja-api/issues/464
+    # path confirmed via strace binaryninja &| kg -C10 python
+    ln -s ${python310}/lib/libpython3.10.so.1.0 $out/opt/
 
     mkdir -p $out/share/pixmaps
     cp docs/img/logo.png $out/share/pixmaps/binary-ninja.png
