@@ -2,7 +2,6 @@
 , autoPatchelfHook
 , copyDesktopItems
 , dbus
-, fetchzip
 , fontconfig
 , freetype
 , libGL
@@ -10,18 +9,27 @@
 , makeDesktopItem
 , makeWrapper
 , ncurses6
+, requireFile
+, unzip
 , xorg
 , zlib
-, src ? null
 }:
 
 stdenv.mkDerivation {
   pname = "binary-ninja";
-  version = src.version;
+  version = "3.1.3469";
 
-  src = fetchzip {
-    inherit (src) url sha256;
-    extension = "zip";
+  src = requireFile rec {
+    name = "BinaryNinja-personal.zip";
+    url = "https://binary.ninja/recover/";
+    sha256 = "1fyc629vxnda6sap32nw5k3ikq1mjnaw6vzxgynj4hz86nf0xaik";
+    message = ''
+      Stable download URLs for Binary Ninja are not available.
+      Please visit ${url} and find the download link for ${name},
+      then add it to the Nix store with this command:
+
+        nix-prefetch-url --name ${name} --type sha256 <URL>
+    '';
   };
 
   buildInputs = [
@@ -44,6 +52,7 @@ stdenv.mkDerivation {
     autoPatchelfHook
     copyDesktopItems
     makeWrapper
+    unzip
   ];
 
   prePatch = ''

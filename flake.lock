@@ -169,8 +169,8 @@
         "open-location-code": "open-location-code"
       },
       "locked": {
-        "lastModified": 1658504194,
-        "narHash": "sha256-C6eelr0S28h2ir/829DXkO4cJ0aEAc1z+wL0eZH5A5U=",
+        "lastModified": 1658795206,
+        "narHash": "sha256-dnj20R0HypGiO06QdgYamvUeZ5uWEHF8Y9tQBVkMvUE=",
         "path": "/home/ash/Secrets",
         "type": "path"
       },
