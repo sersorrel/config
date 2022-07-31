@@ -12,6 +12,8 @@
     bindings = {
       HOME = "seek 0 absolute+exact";
       END = "seek 100 absolute-percent+exact";
+      UP = "ignore";
+      DOWN = "ignore";
     };
     scripts = [
       pkgs.mpvScripts.mpris
