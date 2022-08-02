@@ -35,6 +35,7 @@
     ./gdb.nix
     ./git.nix
     ./glimmer
+    ./gnome-music.nix
     ./gpg.nix
     ./hexchat
     ./htop.nix
