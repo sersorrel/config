@@ -97,6 +97,7 @@
     ./thunar.nix
     ./tio.nix
     ./todoist.nix
+    ./tradedangerous.nix
     ./unicode.nix
     ./vim
     ./whois.nix
