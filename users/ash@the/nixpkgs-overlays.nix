@@ -28,6 +28,18 @@
       ];
     });
   })
+  # https://github.com/garabik/unicode/pull/21
+  (self: super: {
+    unicode-paracode = assert builtins.compareVersions super.unicode-paracode.version "2.9" != 1; super.unicode-paracode.overrideAttrs (old: {
+      patches = (old.patches or []) ++ [
+        (super.fetchpatch {
+          name = "show-unicode1-name-as-fallback.patch";
+          url = "https://github.com/garabik/unicode/pull/21/commits/2c11b705810a5a3a927e2b36ed6d32ce2867a6f7.patch";
+          sha256 = "sha256-cVBXnsi7FGXki7woJj09k8joyP1695HsOTWktPtFg1c=";
+        })
+      ];
+    });
+  })
   (self: super: {
     direnv = super.direnv.overrideAttrs (old: {
       patches = (old.patches or []) ++ [
