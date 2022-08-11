@@ -187,6 +187,9 @@ bindsym $mod+a focus parent
 # focus the child container
 bindsym $mod+z focus child
 
+# toggle "stickiness" (whether a floating window is conceptually on all workspaces)
+bindsym $mod+g sticky toggle
+
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
 set $ws0 0
