@@ -168,6 +168,7 @@ in
             block = "battery";
             format = "{percentage:1} {time} {power:1}";
             driver = "upower";
+            allow_missing = true; # no sense crashing the entire bar about this...
           }
           {
             block = "kdeconnect";
