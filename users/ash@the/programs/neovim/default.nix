@@ -267,15 +267,7 @@ in
         config = ''
           lua <<EOF
           require'lspconfig'.rnix.setup{}
-          require'lspconfig'.pyright.setup{
-            settings = {
-              python = {
-                analysis = {
-                  typeCheckingMode = "strict",
-                },
-              },
-            },
-          }
+          require'lspconfig'.pyright.setup{}
           EOF
         '';
       }
