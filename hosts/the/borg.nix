@@ -20,7 +20,7 @@
       compression = "zstd";
       prune = {
         keep = {
-          within = "1y";
+          within = "6m";
         };
       };
       startAt = "13:00:00";
