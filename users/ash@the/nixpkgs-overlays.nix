@@ -16,18 +16,6 @@
       };
     });
   })
-  # https://github.com/kovidgoyal/kitty/issues/5153
-  (self: super: {
-    kitty = assert builtins.compareVersions super.kitty.version "0.25.1" != 1; super.kitty.overrideAttrs (old: {
-      patches = (old.patches or []) ++ [
-        (super.fetchpatch {
-          name = "combining-char-rendering.patch";
-          url = "https://github.com/kovidgoyal/kitty/commit/e12a9f3caf71cd8d96c7d81314d1888156f37a54.patch";
-          sha256 = "sha256-EBKtMkkcWjc2KGtw9vr5KY9CC3bvDP1eHh/D2odxI/Q=";
-        })
-      ];
-    });
-  })
   # https://github.com/garabik/unicode/pull/21
   (self: super: {
     unicode-paracode = assert builtins.compareVersions super.unicode-paracode.version "2.9" != 1; super.unicode-paracode.overrideAttrs (old: {
