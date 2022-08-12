@@ -10,6 +10,7 @@
     ./calculator.nix
     ./calibre.nix
     ./colordiff.nix
+    ./comma.nix
     ./dconf-editor.nix
     ./dig.nix
     ./dircolors.nix
