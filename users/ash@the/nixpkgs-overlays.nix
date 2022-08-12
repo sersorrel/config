@@ -1,8 +1,20 @@
-{ unstable }:
+{ unstable, here }:
 
+let
+  localPath = path: let
+    inherit (builtins) stringLength substring;
+    # careful here, otherwise we accidentally start copying things to the store (which fails because of the @ in the path)
+    path' = toString path;
+    this' = toString ./.;
+    pathLen = stringLength path';
+    thisLen = stringLength this';
+  in assert substring 0 thisLen path' == this'; here + (substring thisLen pathLen path');
+in
 [
   (self: super: {
-    rust-analyzer = unstable.rust-analyzer; # required to work properly with new Cargo versions
+    # required to work properly with new Cargo versions
+    # the if-statement avoids infinite recursion when these overlays are applied to unstable itself
+    rust-analyzer = if super.path == unstable.path then super.rust-analyzer else unstable.rust-analyzer;
   })
   # https://github.com/flameshot-org/flameshot/issues/2302
   (self: super: {
@@ -31,18 +43,18 @@
   (self: super: {
     direnv = super.direnv.overrideAttrs (old: {
       patches = (old.patches or []) ++ [
-        ./patches/direnv-0001-reduce-verbosity.patch
+        (localPath ./patches/direnv-0001-reduce-verbosity.patch)
       ];
     });
     kitty = super.kitty.overrideAttrs (old: {
       patches = (old.patches or []) ++ [
-        ./patches/kitty-0001-sound-theme.patch
+        (localPath ./patches/kitty-0001-sound-theme.patch)
       ];
     });
     rink = super.rink.overrideAttrs (old: {
       patches = (old.patches or []) ++ [
-        ./patches/rink-0001-change-date-formats.patch
-        ./patches/rink-0002-amp-hour.patch
+        (localPath ./patches/rink-0001-change-date-formats.patch)
+        (localPath ./patches/rink-0002-amp-hour.patch)
       ];
     });
   })
@@ -96,21 +108,21 @@
     };
   })
   (self: super: {
-    file2img = super.callPackage ./programs/file2img/file2img.nix {};
+    file2img = super.callPackage (localPath ./programs/file2img/file2img.nix) {};
   })
   (self: super: {
     rhythmbox = super.rhythmbox.overrideAttrs (old: {
       patches = (old.patches or []) ++ [
-        ./patches/rhythmbox-0001-no-pause-notification.patch
+        (localPath ./patches/rhythmbox-0001-no-pause-notification.patch)
       ];
     });
   })
   (self: super: {
     i3status-rust = super.i3status-rust.overrideAttrs (old: {
       patches = (old.patches or []) ++ [
-        ./patches/i3status-rust-0001-uptime-warning.patch
-        ./patches/i3status-rust-0002-kdeconnect-zero-battery.patch
-        ./patches/i3status-rust-0003-kdeconnect-disconnected-idle.patch
+        (localPath ./patches/i3status-rust-0001-uptime-warning.patch)
+        (localPath ./patches/i3status-rust-0002-kdeconnect-zero-battery.patch)
+        (localPath ./patches/i3status-rust-0003-kdeconnect-disconnected-idle.patch)
       ];
     });
   })
