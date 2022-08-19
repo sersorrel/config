@@ -65,6 +65,11 @@
       test -n "$launchpad_port" && ${pkgs.alsa-utils}/bin/amidi -p "$launchpad_port" -S "F000 20 29 02 0D 09 01 F7"
     '';
 
+    # Stop the sudo prompt timing out.
+    security.sudo.extraConfig = ''
+      Defaults passwd_timeout=0
+    '';
+
     services.logind.lidSwitchDocked = "suspend";
 
     time.timeZone = "Europe/London";
