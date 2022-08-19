@@ -28,6 +28,7 @@
 
     # Currently ~/.profile isn't sourced in graphical sessions, let's fix that.
     # https://github.com/NixOS/nixpkgs/issues/5200
+    # This can be removed in 22.11: https://github.com/NixOS/nixpkgs/pull/185987
     environment.loginShellInit = ''
       if test -f ~/.profile; then
         . ~/.profile
