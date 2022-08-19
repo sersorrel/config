@@ -100,6 +100,10 @@
         wraps = "exa";
         body = "exa --group -F $argv";
       };
+      lsof = {
+        wraps = "lsof";
+        body = "command lsof -P $argv";
+      };
       mkcd = {
         wraps = "mkdir";
         body = "mkdir -p -- $argv[1] && cd -- $argv[1]";
