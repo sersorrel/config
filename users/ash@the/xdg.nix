@@ -11,7 +11,7 @@
         "application/gzip" = "org.gnome.FileRoller.desktop";
         "application/xhtml+xml" = "vim.desktop";
         "application/xml" = "vim.desktop";
-        "image/jpeg" = "org.gnome.eog.desktop";
+        "image/jpeg" = [ "glimmer.desktop" "org.gnome.eog.desktop" ];
         "image/png" = [ "glimmer.desktop" "org.gnome.eog.desktop" ];
         "image/x-dds" = "glimmer.desktop";
         "text/html" = "vim.desktop";
