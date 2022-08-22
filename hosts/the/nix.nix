@@ -34,6 +34,9 @@ in
         "steam-original"
         "tixati"
       ];
+      permittedInsecurePackages = [
+        "python3.9-mistune-0.8.4" # CVE-2022-34749 is a ReDoS, and it's unclear whether it actually impacts mistune 0.8.4 at all
+      ];
     };
     # TODO: https://nixos.wiki/wiki/Overlays#Using_nixpkgs.overlays_from_configuration.nix_as_.3Cnixpkgs-overlays.3E_in_your_NIX_PATH
     overlays = [
