@@ -7,8 +7,8 @@ set -e
 
 kdeconnect-cli --refresh || true
 
-if [ -f ~/.secrets/fix-audio.secrets ]; then
-	. ~/.secrets/fix-audio.secrets
+if [ -f ~/Secrets/fix-audio.secrets ]; then
+	. ~/Secrets/fix-audio.secrets
 else
 	echo "secrets not available" >&2
 	exit 1
