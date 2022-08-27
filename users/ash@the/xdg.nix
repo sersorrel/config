@@ -24,6 +24,8 @@
         "text/x-python3" = "vim.desktop";
         "application/epub+zip" = "calibre-ebook-viewer.desktop";
         "application/zip" = "org.gnome.FileRoller.desktop";
+        "audio/x-wav" = [ "org.tenacityaudio.Tenacity.desktop" "mpv.desktop" ];
+        "image/svg+xml" = "org.inkscape.Inkscape.desktop";
       };
       associations.removed = {
         "audio/mp4" = "org.kde.kid3-qt.desktop";
@@ -46,6 +48,7 @@
         "x-scheme-handler/unknown" = "google-chrome.desktop";
         "x-scheme-handler/webcal" = "google-chrome.desktop";
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = "writer.desktop";
+        "audio/x-wav" = "mpv.desktop";
       };
     };
     userDirs = {
