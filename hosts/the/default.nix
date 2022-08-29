@@ -10,7 +10,7 @@
       ./hardware-configuration.nix
       ./input.nix
       ./iotop.nix
-      ./jupyter.nix
+      ./jupyter
       ./lxd.nix
       ./networking.nix
       ./nintendo-controllers.nix
