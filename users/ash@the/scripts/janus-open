@@ -30,7 +30,7 @@ case $(echo "$1" | tr '[:upper:]' '[:lower:]') in
 	*.7z) 7za l "$1" >"$outfile";;
 	*)
 		for ext in $(bat -L | cut -d: -f2 | tr ',' ' '); do
-			trimmed="${1%$ext}"
+			trimmed="${1%"$ext"}"
 			# If the file *has an extension* and that extension matches, or if the *entire* filename matches, highlight it.
 			# This avoids cases where the filename ends with "d", but not with ".d", for instance.
 			if [ "$trimmed" = "${1%.*}." ] || [ "$trimmed" = "" ]; then
