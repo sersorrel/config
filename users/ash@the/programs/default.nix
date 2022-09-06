@@ -104,8 +104,9 @@
     ./whois.nix
     ./wine.nix
     ./wxhexeditor.nix
-    ./xorg
     ./xclip.nix
+    ./xivlauncher.nix
+    ./xorg
     ./youtube-dl.nix
     ./zenity.nix
     ./zip.nix
