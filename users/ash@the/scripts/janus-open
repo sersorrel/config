@@ -10,7 +10,7 @@ fi
 
 # Create the output file.
 umask 077
-outfile=$(mktemp)
+outfile=$(mktemp --tmpdir janus-XXXXXXXXXX)
 if [ -z "$outfile" ]; then
 	exit 0
 fi
