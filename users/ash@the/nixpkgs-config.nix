@@ -6,6 +6,7 @@
     "discord"
     "insync"
     "obsidian"
+    "rider"
     "slack"
     "steam"
     "steam-original"
