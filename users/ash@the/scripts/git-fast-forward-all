@@ -4,17 +4,8 @@
 
 EPERM=1
 ENOENT=2
-EEXIST=17
 
 curref=$(git symbolic-ref HEAD 2>&-)
-
-fetch_all() {
-  git fetch --all
-  ret=$?
-  [ "$ret" -eq 0 ] || {
-    return "$ret"
-  }
-}
 
 fast_forward_all() {
   ret=0
@@ -53,17 +44,6 @@ fast_forward_all() {
 
   return "$ret"
 }
-
-fetch_all
-excode=$?
-[ "$excode" -eq 0 ] || {
-  exit "$excode"
-}
-
-if output=$(git status --porcelain) && [ -n "$output" ]; then
-  echo "Skipped: repo is not clean"
-  exit $EEXIST
-fi
 
 fast_forward_all
 excode=$?
