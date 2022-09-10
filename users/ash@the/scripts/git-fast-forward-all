@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+# SPDX-License-Identifier: MPL-2.0
+
+EPERM=1
+ENOENT=2
+EEXIST=17
+
+curref=$(git symbolic-ref HEAD 2>&-)
+
+fetch_all() {
+  git fetch --all
+  ret=$?
+  [ "$ret" -eq 0 ] || {
+    return "$ret"
+  }
+}
+
+fast_forward_all() {
+  ret=0
+
+  while read -r line; do
+    branch=$(echo "$line" | cut -c 8- | rev | cut -c 8- | rev)
+    remote=$(git config --local --get "branch.$branch.remote")
+    upstream=$(git config --local --get "branch.$branch.merge" | cut -c 12-)
+
+    if ! git rev-parse --verify --quiet "$remote/$upstream" 1>&- 2>&-; then
+      ret=$(( $ret | $ENOENT ))
+      echo "Branch $branch"
+      echo "  skipped: upstream is absent"
+      continue
+    fi
+
+    if [ -z "$(git log --oneline -1 "$branch..$remote/$upstream")" ]; then
+      continue
+    fi
+
+    echo "Branch $branch"
+
+    if [ -n "$(git log --oneline -1 "$remote/$upstream..$branch")" ]; then
+      echo "  skipped: diverged"
+      ret=$(( $ret | $EPERM ))
+      continue
+    fi
+
+    if [ "refs/heads/$branch" = "$curref" ]; then
+      git merge --ff-only "$remote/$upstream" 1>&- 2>&-
+    else
+      git update-ref "refs/heads/$branch" "$remote/$upstream" 1>&- 2>&-
+    fi
+    echo "  fast-forwarded"
+  done < <(git config --local --name-only --get-regex '^branch.*remote$')
+
+  return "$ret"
+}
+
+fetch_all
+excode=$?
+[ "$excode" -eq 0 ] || {
+  exit "$excode"
+}
+
+if output=$(git status --porcelain) && [ -n "$output" ]; then
+  echo "Skipped: repo is not clean"
+  exit $EEXIST
+fi
+
+fast_forward_all
+excode=$?
+[ "$excode" -eq 0 ] || {
+  exit "$excode"
+}
