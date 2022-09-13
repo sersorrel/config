@@ -21,20 +21,17 @@
     ./eiciel.nix
     ./element.nix
     ./evince.nix
-    ./exa.nix
     ./exiftool.nix
     ./fd.nix
     ./ffmpeg.nix
     ./file2img
     ./firefox.nix
-    ./fish.nix
     ./flac.nix
     ./flameshot.nix
     ./frescobaldi.nix
     ./fzf.nix
     ./gammastep.nix
     ./gdb.nix
-    ./git.nix
     ./glimmer
     ./gnome-music.nix
     ./gpg.nix

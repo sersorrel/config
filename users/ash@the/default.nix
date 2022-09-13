@@ -5,6 +5,7 @@
   stateVersion = "21.05";
   configuration = { lib, pkgs, ... }: {
     imports = [
+      ../common
       ./fonts.nix
       ./nix.nix
       ./programs
