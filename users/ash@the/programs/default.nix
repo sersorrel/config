@@ -28,7 +28,6 @@
     ./flac.nix
     ./flameshot.nix
     ./frescobaldi.nix
-    ./fzf.nix
     ./gammastep.nix
     ./gdb.nix
     ./glimmer

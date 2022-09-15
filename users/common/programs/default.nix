@@ -3,6 +3,7 @@
     ./any-nix-shell.nix
     ./exa.nix
     ./fish.nix
+    ./fzf.nix
     ./git.nix
     ./less.nix
     ./neovim
