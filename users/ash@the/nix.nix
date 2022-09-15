@@ -1,10 +1,10 @@
-{ inputs, pkgs, ... }:
+{ config, inputs, pkgs, ... }:
 
 {
   nix.registry = {
     nixpkgs.flake = inputs.nixpkgs;
     nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
-    secrets.to = { type = "path"; path = toString ~/Secrets; };
+    secrets.to = { type = "path"; path = "${config.home.homeDirectory}/Secrets"; };
   };
 
   nixpkgs.config = import ./nixpkgs-config.nix;

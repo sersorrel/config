@@ -1,7 +1,7 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
-  home.sessionPath = [ (toString ~/.local/bin) ];
+  home.sessionPath = [ "${config.home.homeDirectory}/.local/bin" ];
   home.file.".local/bin" = {
     source = ./.;
     recursive = true;
