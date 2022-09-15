@@ -10,7 +10,6 @@
     ./colordiff.nix
     ./dconf-editor.nix
     ./dig.nix
-    ./dircolors.nix
     ./discord.nix
     ./display-volume.nix
     ./dunst.nix

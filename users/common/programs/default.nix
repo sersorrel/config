@@ -3,6 +3,7 @@
     ./any-nix-shell.nix
     ./bat.nix
     ./comma.nix
+    ./dircolors.nix
     ./direnv.nix
     ./exa.nix
     ./fd.nix
