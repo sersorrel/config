@@ -1,6 +1,7 @@
 {
   imports = [
     ./any-nix-shell.nix
+    ./bat.nix
     ./comma.nix
     ./direnv.nix
     ./exa.nix

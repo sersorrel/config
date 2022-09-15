@@ -2,7 +2,6 @@
   imports = [
     ./7zip.nix
     ./bash.nix
-    ./bat.nix
     ./binary-ninja
     ./bintools.nix
     ./brightnessctl.nix
