@@ -75,7 +75,6 @@
     ./readline.nix
     ./rhythmbox.nix
     ./rink.nix
-    ./ripgrep.nix
     ./rustup.nix
     ./signal.nix
     ./slack.nix
