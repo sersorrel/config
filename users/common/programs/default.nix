@@ -2,6 +2,7 @@
   imports = [
     ./any-nix-shell.nix
     ./exa.nix
+    ./fd.nix
     ./fish.nix
     ./fzf.nix
     ./git.nix

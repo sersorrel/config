@@ -21,7 +21,6 @@
     ./element.nix
     ./evince.nix
     ./exiftool.nix
-    ./fd.nix
     ./ffmpeg.nix
     ./file2img
     ./firefox.nix
