@@ -11,6 +11,7 @@
     ./git.nix
     ./less.nix
     ./neovim
+    ./nix.nix
     ./ripgrep.nix
     ./some.nix
     ./starship.nix

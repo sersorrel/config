@@ -56,7 +56,6 @@
     ./nix-locate.nix
     ./nix-prefetch.nix
     ./nix-script.nix
-    ./nix.nix
     ./notify-send.nix
     ./obs.nix
     ./obsidian.nix
