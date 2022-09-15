@@ -12,7 +12,6 @@
 
     # quick hack for the time being
     programs.git.extraConfig.core.editor = lib.mkForce "vim";
-    programs.git.extraConfig.core.pager = lib.mkForce "less";
 
     programs.home-manager.enable = true;
   };

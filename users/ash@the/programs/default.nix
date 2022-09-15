@@ -82,7 +82,6 @@
     ./rustup.nix
     ./signal.nix
     ./slack.nix
-    ./some.nix
     ./sqlitebrowser.nix
     ./ssh.nix
     ./steam.nix
