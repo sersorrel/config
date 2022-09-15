@@ -1,6 +1,7 @@
 {
   imports = [
     ./any-nix-shell.nix
+    ./comma.nix
     ./exa.nix
     ./fd.nix
     ./fish.nix
