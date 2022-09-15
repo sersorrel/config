@@ -60,7 +60,6 @@
     ./make.nix
     ./mpv.nix
     ./nemo.nix
-    ./neovim
     ./nix-locate.nix
     ./nix-prefetch.nix
     ./nix-script.nix

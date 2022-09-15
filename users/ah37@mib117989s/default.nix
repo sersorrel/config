@@ -10,9 +10,6 @@
       ./programs
     ];
 
-    # quick hack for the time being
-    programs.git.extraConfig.core.editor = lib.mkForce "vim";
-
     programs.home-manager.enable = true;
   };
 }
