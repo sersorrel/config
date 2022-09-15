@@ -85,7 +85,6 @@
     ./some.nix
     ./sqlitebrowser.nix
     ./ssh.nix
-    ./starship.nix
     ./steam.nix
     ./sublime-merge.nix
     ./syncthing.nix
