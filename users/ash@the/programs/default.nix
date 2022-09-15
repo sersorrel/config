@@ -12,7 +12,6 @@
     ./dconf-editor.nix
     ./dig.nix
     ./dircolors.nix
-    ./direnv.nix
     ./discord.nix
     ./display-volume.nix
     ./dunst.nix
