@@ -1,7 +1,6 @@
 {
   imports = [
     ./7zip.nix
-    ./any-nix-shell.nix
     ./bash.nix
     ./bat.nix
     ./binary-ninja
