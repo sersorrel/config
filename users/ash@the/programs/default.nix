@@ -50,7 +50,6 @@
     ./keychain.nix
     ./kid3.nix
     ./kitty
-    ./less.nix
     ./libreoffice.nix
     ./lorri.nix
     ./lsof.nix
