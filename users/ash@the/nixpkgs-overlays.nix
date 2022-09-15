@@ -11,22 +11,10 @@ let
   in assert substring 0 thisLen path' == this'; here + (substring thisLen pathLen path');
 in
 [
-  (self: super: {
-    # required to work properly with new Cargo versions
-    # the if-statement avoids infinite recursion when these overlays are applied to unstable itself
-    rust-analyzer = if super.path == unstable.path then super.rust-analyzer else unstable.rust-analyzer;
-  })
-  # https://github.com/flameshot-org/flameshot/issues/2302
-  (self: super: {
-    flameshot = assert builtins.compareVersions super.flameshot.version "11.0.0" == 0; super.flameshot.overrideAttrs (old: {
-      version = "unstable-2022-02-18";
-      src = super.fetchFromGitHub {
-        owner = "flameshot-org";
-        repo = "flameshot";
-        rev = "aa6b5eac93ee92b58c5ead9404f60a760f667980";
-        sha256 = "0dckspmzyakn68r84j58njl73n5k662d0p6517v5jmwcqm3qrrkm";
-      };
-    });
+  # the if-statement avoids infinite recursion when these overlays are applied to unstable itself
+  (self: super: if super.path == unstable.path then {} else {
+    inherit (unstable) rust-analyzer; # required to work properly with new Cargo versions
+    inherit (assert builtins.compareVersions super.flameshot.version "11.0.0" == 0; unstable) flameshot; # https://github.com/flameshot-org/flameshot/issues/2302
   })
   # https://github.com/garabik/unicode/pull/21
   (self: super: {
