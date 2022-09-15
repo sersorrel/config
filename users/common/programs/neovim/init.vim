@@ -181,8 +181,11 @@ endif
 set linebreak
 
 " Show the current file in the terminal title.
-set title
-set titleold=
+" This breaks horribly in iTerm2 for some reason, so disable it there.
+if $LC_TERMINAL != "iTerm2"
+  set title
+  set titleold=
+endif
 
 " Highlight the column after tw by default.
 set cc=+1
