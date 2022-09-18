@@ -32,6 +32,7 @@
     gcc
     man-pages
     man-pages-posix
+    protontricks
   ];
 
   documentation.dev.enable = true;
