@@ -11,11 +11,6 @@ let
   in assert substring 0 thisLen path' == this'; here + (substring thisLen pathLen path');
 in
 [
-  # the if-statement avoids infinite recursion when these overlays are applied to unstable itself
-  (self: super: if super.path == unstable.path then {} else {
-    inherit (unstable) rust-analyzer; # required to work properly with new Cargo versions
-    inherit (assert builtins.compareVersions super.flameshot.version "11.0.0" == 0; unstable) flameshot; # https://github.com/flameshot-org/flameshot/issues/2302
-  })
   # https://github.com/garabik/unicode/pull/21
   (self: super: {
     unicode-paracode = assert builtins.compareVersions super.unicode-paracode.version "2.9" != 1; super.unicode-paracode.overrideAttrs (old: {

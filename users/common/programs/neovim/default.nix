@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 let
   essence-vim = pkgs.vimUtils.buildVimPlugin {
@@ -304,6 +304,6 @@ in
   };
   home.packages = with pkgs; [
     rnix-lsp
-    rust-analyzer
+    inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.rust-analyzer
   ];
 }
