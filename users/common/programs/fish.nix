@@ -145,8 +145,6 @@
     interactiveShellInit = ''
       # Most modern terminals automatically rewrap text, don't try and preempt them.
       set -g fish_handle_reflow 0
-      # Set up our version of lessfile.
-      janus | source
     '';
     shellInit = ''
       function fish_greeting

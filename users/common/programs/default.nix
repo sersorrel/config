@@ -10,6 +10,7 @@
     ./fish.nix
     ./fzf.nix
     ./git.nix
+    ./janus.nix
     ./less.nix
     ./neovim
     ./nix.nix
