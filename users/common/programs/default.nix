@@ -9,6 +9,7 @@
     ./fd.nix
     ./fish.nix
     ./fzf.nix
+    ./git-fast-forward-all.nix
     ./git.nix
     ./janus.nix
     ./less.nix
