@@ -14,6 +14,7 @@ in
     buildCores = 3; # cores per build
     maxJobs = 3; # simultaneous builds
     settings.experimental-features = [ "nix-command" "flakes" ];
+    settings.keep-outputs = true;
     registry = {
       nixpkgs.flake = inputs.nixpkgs;
       nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
