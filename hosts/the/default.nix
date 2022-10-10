@@ -74,6 +74,8 @@
 
     time.timeZone = "Europe/London";
 
+    programs.nix-ld.enable = true;
+
     users = {
       mutableUsers = false;
       users.ash = {
