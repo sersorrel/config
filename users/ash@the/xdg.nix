@@ -26,6 +26,7 @@
         "application/zip" = "org.gnome.FileRoller.desktop";
         "audio/x-wav" = [ "org.tenacityaudio.Tenacity.desktop" "mpv.desktop" ];
         "image/svg+xml" = "org.inkscape.Inkscape.desktop";
+        "application/x-cd-image" = "org.gnome.FileRoller.desktop";
       };
       associations.removed = {
         "audio/mp4" = "org.kde.kid3-qt.desktop";
