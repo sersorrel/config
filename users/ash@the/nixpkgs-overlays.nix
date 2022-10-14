@@ -22,6 +22,12 @@ in
         })
       ];
     });
+    obsidian = assert builtins.compareVersions super.obsidian.version "0.15.9" == 0; (super.obsidian.overrideAttrs (old: {
+      src = super.fetchurl {
+        url = "https://github.com/obsidianmd/obsidian-releases/releases/download/v1.0.0/obsidian-1.0.0.tar.gz";
+        sha256 = "13x4sll2p2yw09v0b3amxkplib702m3idcq7y86nrzkk43ssal0z";
+      };
+    })).override { electron_17 = super.electron_18; };
   })
   (self: super: {
     direnv = super.direnv.overrideAttrs (old: {
