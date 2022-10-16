@@ -29,6 +29,7 @@
     ./gnome-music.nix
     ./gpg.nix
     ./hexchat
+    ./hledger.nix
     ./htop.nix
     ./httpie.nix
     ./hushboard.nix
