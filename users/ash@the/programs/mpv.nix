@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   programs.mpv = {
@@ -8,6 +8,9 @@
       keep-open = true;
       osd-on-seek = false;
       osd-msg3 = "\${osd-sym-cc} \${time-pos} / \${duration} (\${percent-pos}%), \${time-remaining} left";
+      screenshot-format = "png";
+      screenshot-directory = builtins.replaceStrings ["$HOME"] ["${config.home.homeDirectory}"] "${config.xdg.userDirs.pictures}/Screenshots/mpv";
+      screenshot-template = "%tF %tT %F %P %#n";
     };
     bindings = {
       HOME = "seek 0 absolute+exact";
