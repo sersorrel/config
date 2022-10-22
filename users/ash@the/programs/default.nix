@@ -1,6 +1,7 @@
 {
   imports = [
     ./7zip.nix
+    ./anki.nix
     ./bash.nix
     ./binary-ninja
     ./bintools.nix
