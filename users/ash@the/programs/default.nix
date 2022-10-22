@@ -63,6 +63,7 @@
     ./peek.nix
     ./playerctl.nix
     ./pngcrush.nix
+    ./prism-launcher.nix
     ./qpwgraph.nix
     ./qutebrowser.nix
     ./rcu
