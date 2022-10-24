@@ -50,6 +50,7 @@
         "x-scheme-handler/webcal" = "google-chrome.desktop";
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = "writer.desktop";
         "audio/x-wav" = "mpv.desktop";
+        "inode/directory" = "thunar.desktop";
       };
     };
     userDirs = {
