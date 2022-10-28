@@ -39,6 +39,31 @@ in
     # TODO: https://nixos.wiki/wiki/Overlays#Using_nixpkgs.overlays_from_configuration.nix_as_.3Cnixpkgs-overlays.3E_in_your_NIX_PATH
     overlays = [
       (self: super: {
+        fishPlugins = super.fishPlugins.overrideScope' (self': super': let
+          meta = {
+            pname = "fenv.rs";
+            version = "unstable-2022-10-28";
+            src = super.fetchFromGitHub {
+              owner = "sersorrel";
+              repo = "fenv.rs";
+              rev = "c3fba45c9d86f2177d3b698bede4e6476c2a2bd7";
+              sha256 = "01i44rmi99wjrggd6r99qpnmclxdjllgxl73kl06vx7p29hzgsx6";
+            };
+          };
+          fenv = super.rustPlatform.buildRustPackage {
+            inherit (meta) pname version src;
+            cargoSha256 = "0isq1niw5yw8ycvqkvs2l10jww6k5mpmwzyr2ag57imcfw8s1pik";
+          };
+        in {
+          foreign-env = super'.buildFishPlugin {
+            inherit (meta) pname version src;
+            preInstall = ''
+              sed -i 's|_fenv|${fenv}/bin/_fenv|g' functions/fenv.fish
+            '';
+          };
+        });
+      })
+      (self: super: {
         i3lock-color = super.i3lock-color.overrideAttrs (old: {
           src = self.fetchFromGitHub {
             owner = "sersorrel";
