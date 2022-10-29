@@ -15,6 +15,7 @@
     "talon"
     "talon-beta"
     "todoist-electron"
+    "webstorm"
     "zoom"
   ];
 }

@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  home.packages = with pkgs; [ jetbrains.clion jetbrains.rider dotnet-sdk ];
+  home.packages = with pkgs; [ jetbrains.clion jetbrains.rider dotnet-sdk jetbrains.webstorm ];
   home.file.".ideavimrc".text = ''
     " make undo behave like real vim, https://youtrack.jetbrains.com/issue/VIM-308
     set nooldundo
