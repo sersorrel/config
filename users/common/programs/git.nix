@@ -93,6 +93,9 @@
       fetch = {
         prune = true;
       };
+      gpg = {
+        ssh.allowedSignersFile = "/dev/null";
+      };
       init = {
         defaultBranch = "main";
       };
