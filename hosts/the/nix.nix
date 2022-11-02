@@ -38,9 +38,6 @@ in
     };
     # TODO: https://nixos.wiki/wiki/Overlays#Using_nixpkgs.overlays_from_configuration.nix_as_.3Cnixpkgs-overlays.3E_in_your_NIX_PATH
     overlays = [
-      (self: super: { # TODO: remove once https://github.com/NixOS/nixpkgs/issues/198505 is widely available
-        nginxStable = super.nginxStable.override { openssl = self.openssl_1_1; };
-      })
       (self: super: {
         fishPlugins = super.fishPlugins.overrideScope' (self': super': let
           meta = {
