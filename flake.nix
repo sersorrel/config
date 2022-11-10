@@ -4,10 +4,6 @@
   inputs.home-manager.url = "github:nix-community/home-manager/release-22.05";
   inputs.home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-  inputs.mach-nix.url = "github:DavHau/mach-nix";
-  inputs.mach-nix.inputs.nixpkgs.follows = "nixpkgs-unstable";
-  inputs.mach-nix.inputs.pypi-deps-db.follows = "pypi-deps-db";
-
   inputs.nix-script.url = "github:BrianHicks/nix-script";
   inputs.nix-script.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
@@ -18,12 +14,9 @@
 
   inputs.nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  inputs.pypi-deps-db.url = "github:DavHau/pypi-deps-db";
-  inputs.pypi-deps-db.flake = false;
-
   inputs.secrets.url = "secrets";
 
-  outputs = { self, home-manager, mach-nix, nix-script, nixos-channel, nixpkgs, nixpkgs-unstable, pypi-deps-db, secrets } @ inputs: let
+  outputs = { self, home-manager, nix-script, nixos-channel, nixpkgs, nixpkgs-unstable, secrets } @ inputs: let
     inherit (nixpkgs.lib) filterAttrs nameValuePair;
     asciiLower = "abcdefghijklmnopqrstuvwxyz";
     asciiUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
