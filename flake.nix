@@ -19,6 +19,7 @@
   inputs.nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   inputs.pypi-deps-db.url = "github:DavHau/pypi-deps-db";
+  inputs.pypi-deps-db.flake = false;
 
   inputs.secrets.url = "secrets";
 
