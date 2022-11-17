@@ -347,6 +347,11 @@ require'rust-tools'.setup{
 -- set up cmp, see https://github.com/hrsh7th/nvim-cmp#basic-configuration
 local cmp = require'cmp'
 cmp.setup{
+  snippet = {
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body)
+      end,
+    },
   mapping = {
     ["<c-p>"] = cmp.mapping.select_prev_item(),
     ["<c-n>"] = cmp.mapping.select_next_item(),
@@ -365,6 +370,7 @@ cmp.setup{
     { name = "nvim_lsp" },
     { name = "crates" },
     { name = "path" },
+    { name = "vsnip" },
     { name = "buffer", max_item_count = 10 },
     },
   formatting = {

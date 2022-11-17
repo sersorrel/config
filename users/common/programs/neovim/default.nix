@@ -280,6 +280,8 @@ in
       cmp-buffer
       cmp-nvim-lsp
       cmp-path
+      cmp-vsnip
+      vim-vsnip
       {
         plugin = crates-nvim;
         config = ''
