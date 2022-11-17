@@ -11,6 +11,7 @@
       screenshot-format = "png";
       screenshot-directory = builtins.replaceStrings ["$HOME"] ["${config.home.homeDirectory}"] "${config.xdg.userDirs.pictures}/Screenshots/mpv";
       screenshot-template = "%tF %tT %F %P %#n";
+      replaygain = "track";
     };
     bindings = {
       HOME = "seek 0 absolute+exact";
