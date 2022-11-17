@@ -9,5 +9,6 @@
     set print thread-events off
     set pagination off
     set non-stop on
+    set disassembly-flavor intel
   '';
 }
