@@ -92,6 +92,9 @@ in
     syntax match nixFunctionCall /builtins\.\&builtins/ conceal cchar=𝔹
     syntax match nixFunctionCall /unstable\.\&unstable/ conceal cchar=𝕌
   '';
+  xdg.configFile."nvim/after/ftplugin/rust.vim".text = ''
+    nnoremap <buffer> <leader>f :call rustfmt#Format()<CR>
+  '';
   programs.neovim = {
     enable = true;
     extraConfig = builtins.readFile ./init.vim;
