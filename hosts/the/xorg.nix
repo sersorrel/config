@@ -23,6 +23,8 @@
     updateDbusEnvironment = true;
   };
 
+  # TODO: in picom v10, it may attempt to autostart: https://github.com/yshui/picom/issues/791
+  # TODO: in picom v10, the `egl` backend was added, which may solve any problems with `glx`: https://github.com/yshui/picom/pull/878
   services.picom = {
     enable = true;
     backend = "glx";
