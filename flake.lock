@@ -83,11 +83,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1669116626,
-        "narHash": "sha256-cS3ohSneZhiEi/vmaHDfeACUZNhMgORCSSSsknUg42w=",
+        "lastModified": 1669374274,
+        "narHash": "sha256-F8bwwaxXMVApJ6n6CtxBzsj59n6Dz1DLO9Aq8kL+VK4=",
         "owner": "BrianHicks",
         "repo": "nix-script",
-        "rev": "98dc4d13e98c73383a754c4924f064c236226554",
+        "rev": "1440c6dfdb4ffe4e082ef0badfd759e20f588465",
         "type": "github"
       },
       "original": {
@@ -98,7 +98,7 @@
     },
     "nixos-channel": {
       "locked": {
-        "narHash": "sha256-+rhtSA2Pxee6MwN5lW3An2TSWzrglq+Pqvydd4wbI08=",
+        "narHash": "sha256-EssPIVysYrRQ7WgQhDwme/4Wo53E/varsBcljz0BeAw=",
         "type": "tarball",
         "url": "https://nixos.org/channels/nixos-22.05/nixexprs.tar.xz"
       },
@@ -109,11 +109,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1668984258,
-        "narHash": "sha256-0gDMJ2T3qf58xgcSbYoXiRGUkPWmKyr5C3vcathWhKs=",
+        "lastModified": 1669378442,
+        "narHash": "sha256-nm+4PN0A4SnV0SzEchxrMyKPvI3Ld/aoom4PnHeHucs=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "cf63ade6f74bbc9d2a017290f1b2e33e8fbfa70a",
+        "rev": "0faaf0a9bb6dedb69bfd43ac06fb27fadc476c51",
         "type": "github"
       },
       "original": {
@@ -125,11 +125,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1668994630,
-        "narHash": "sha256-1lqx6HLyw6fMNX/hXrrETG1vMvZRGm2XVC9O/Jt0T6c=",
+        "lastModified": 1669320964,
+        "narHash": "sha256-EBFw+ge12Pcr3qCk8If3/eMBAoQLR7ytndXZoRevUtM=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "af50806f7c6ab40df3e6b239099e8f8385f6c78b",
+        "rev": "27ccd29078f974ddbdd7edc8e38c8c8ae003c877",
         "type": "github"
       },
       "original": {
@@ -169,8 +169,8 @@
         "open-location-code": "open-location-code"
       },
       "locked": {
-        "lastModified": 1669050233,
-        "narHash": "sha256-av3jvlbOQawBX1OdD2HHUVlGU7fVo1xxyy91hnqk32s=",
+        "lastModified": 1669374527,
+        "narHash": "sha256-+puKaabFC2U6iZFiZnos37JO4resvdzi4k5mLv9gWrI=",
         "path": "/home/ash/Secrets",
         "type": "path"
       },
