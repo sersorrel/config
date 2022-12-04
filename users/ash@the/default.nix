@@ -1,9 +1,6 @@
 {
   system = "x86_64-linux";
-  username = "ash";
-  homeDirectory = "/home/ash";
-  stateVersion = "21.05";
-  configuration = { lib, pkgs, ... }: {
+  modules = [({ lib, pkgs, ... }: {
     imports = [
       ../common
       ./fonts.nix
@@ -14,6 +11,12 @@
       ./theme.nix
       ./xdg.nix
     ];
+
+    home = {
+      username = "ash";
+      homeDirectory = "/home/ash";
+      stateVersion = "21.05";
+    };
 
     programs.home-manager.enable = true;
 
@@ -62,5 +65,5 @@
         };
       };
     };
-  };
+  })];
 }

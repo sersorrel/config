@@ -1,6 +1,6 @@
 {
   system = "x86_64-linux";
-  modules = [({ pkgs, lib, secrets, ... }: {
+  modules = [({ pkgs, lib, secrets, config,... }: {
     imports = [
       ./applications.nix
       ./bluetooth.nix
@@ -25,15 +25,6 @@
     # Use the systemd-boot EFI boot loader.
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
-
-    # Currently ~/.profile isn't sourced in graphical sessions, let's fix that.
-    # https://github.com/NixOS/nixpkgs/issues/5200
-    # This can be removed in 22.11: https://github.com/NixOS/nixpkgs/pull/185987
-    environment.loginShellInit = ''
-      if test -f ~/.profile; then
-        . ~/.profile
-      fi
-    '';
 
     hardware.cpu.intel.updateMicrocode = true;
 

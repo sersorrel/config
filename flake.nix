@@ -1,16 +1,16 @@
 {
   description = "system configurations";
 
-  inputs.home-manager.url = "github:nix-community/home-manager/release-22.05";
+  inputs.home-manager.url = "github:nix-community/home-manager/release-22.11";
   inputs.home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
   inputs.nix-script.url = "github:BrianHicks/nix-script";
   inputs.nix-script.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
   # https://discourse.nixos.org/t/do-flakes-also-set-the-system-channel/19798/6
-  inputs.nixos-channel.url = "https://nixos.org/channels/nixos-22.05/nixexprs.tar.xz";
+  inputs.nixos-channel.url = "https://nixos.org/channels/nixos-22.11/nixexprs.tar.xz";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
 
   inputs.nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -31,7 +31,8 @@
         })
       ];
     });
-    mkUserConfig = args: home-manager.lib.homeManagerConfiguration (args // {
+    mkUserConfig = args: home-manager.lib.homeManagerConfiguration (builtins.removeAttrs args ["system"] // {
+      pkgs = nixpkgs.legacyPackages.${args.system};
       extraSpecialArgs = (args.extraSpecialArgs or {}) // { inherit inputs; inherit (secrets) secrets; };
     });
     hosts = builtins.attrNames (filterAttrs (name: type: type == "directory") (builtins.readDir ./hosts));

@@ -539,17 +539,18 @@ diff -u a/glimmer-2.10.30/po/ja.po b/glimmer-2.10.30/po/ja.po
 diff -u a/glimmer-2.10.30/po/ka.po b/glimmer-2.10.30/po/ka.po
 --- glimmer-2.10.30/po/ka.po
 +++ glimmer-2.10.30/po/ka.po
-@@ -15,10 +15,6 @@
- "Content-Transfer-Encoding: 8bit\n"
- "X-Generator: KBabel 1.10.1\n"
- 
+@@ -18,11 +18,6 @@
+ "Plural-Forms: nplurals=1; plural=0;\n"
+ "X-Generator: Poedit 3.0.1\n"
+
+-#: ../desktop/org.glimmer.Glimmer.appdata.xml.in.in.h:1
 -#: ../desktop/glimmer.desktop.in.in.h:1 ../app/about.h:26
 -msgid "Glimmer"
--msgstr ""
+-msgstr "Glimmer"
 -
- #: ../desktop/glimmer.desktop.in.in.h:2
- msgid "Image Editor"
- msgstr "გამოსახულებების რედაქტორი"
+ #: ../desktop/org.glimmer.Glimmer.appdata.xml.in.in.h:2
+ #: ../desktop/glimmer.desktop.in.in.h:3
+ msgid "Create images and edit photographs"
 diff -u a/glimmer-2.10.30/po/kk.po b/glimmer-2.10.30/po/kk.po
 --- glimmer-2.10.30/po/kk.po
 +++ glimmer-2.10.30/po/kk.po

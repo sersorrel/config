@@ -36,7 +36,6 @@
     ./hushboard.nix
     ./i3
     ./inkscape.nix
-    ./insync.nix
     ./jetbrains.nix
     ./jless.nix
     ./jq.nix
@@ -66,7 +65,6 @@
     ./prism-launcher.nix
     ./qpwgraph.nix
     ./qutebrowser.nix
-    ./rcu
     ./readline.nix
     ./rhythmbox.nix
     ./rink.nix

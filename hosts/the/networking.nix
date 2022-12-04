@@ -6,6 +6,7 @@
 
   environment.systemPackages = with pkgs; [ mullvad-vpn ];
   services.mullvad-vpn.enable = true;
+  services.mullvad-vpn.package = pkgs.mullvad-vpn; # install the GUI
 
   networking.extraHosts = "127.0.0.1 ash";
   services.nginx.enable = true;

@@ -11,8 +11,8 @@ let
 in
 {
   nix = {
-    buildCores = 3; # cores per build
-    maxJobs = 3; # simultaneous builds
+    settings.cores = 3; # cores per build
+    settings.max-jobs = 3; # simultaneous builds
     settings.experimental-features = [ "nix-command" "flakes" ];
     settings.keep-outputs = true;
     registry = {
@@ -33,6 +33,7 @@ in
         "nvidia-x11"
         "steam"
         "steam-original"
+        "steam-run"
         "tixati"
       ];
     };
