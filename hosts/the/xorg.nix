@@ -23,8 +23,11 @@
     updateDbusEnvironment = true;
   };
 
-  # TODO: in picom v10, it may attempt to autostart: https://github.com/yshui/picom/issues/791
-  # TODO: in picom v10, the `egl` backend was added, which may solve any problems with `glx`: https://github.com/yshui/picom/pull/878
+  # picom v10 attempts to autostart: https://github.com/yshui/picom/issues/791
+  # but since services.picom.enable creates a systemd service for it, we don't want it to.
+  environment.extraSetup = ''
+    rm $out/etc/xdg/autostart/picom.desktop
+  '';
   services.picom = {
     enable = true;
     backend = "xrender"; # since v10, glx (and egl) stutter badly when moving/resizing windows on top of Chrome
