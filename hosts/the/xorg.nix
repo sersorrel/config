@@ -27,7 +27,7 @@
   # TODO: in picom v10, the `egl` backend was added, which may solve any problems with `glx`: https://github.com/yshui/picom/pull/878
   services.picom = {
     enable = true;
-    backend = "glx";
+    backend = "xrender"; # since v10, glx (and egl) stutter badly when moving/resizing windows on top of Chrome
     vSync = true;
     shadow = true;
     shadowExclude = [
