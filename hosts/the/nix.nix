@@ -83,6 +83,12 @@ in
           });
         });
         i3 = super.i3.overrideAttrs (old: {
+          src = assert super.lib.versionOlder super.i3.version "4.22.0"; super.fetchFromGitHub {
+            owner = "i3";
+            repo = "i3";
+            rev = "30131ed69795387ddc576b5dab24b5649e5b8583";
+            sha256 = "13jwjbb9vcqavg6dy6fk99vxbh7kfya56a0m5c6h3z12nkrd5030";
+          };
           patches = (old.patches or []) ++ [
             ./patches/i3-0001-i3bar-border.patch
           ];

@@ -36,8 +36,8 @@ index 671588fe..6014b340 100644
   */
  static void draw_button(surface_t *surface, color_t fg_color, color_t bg_color, color_t border_color,
                          int x, int width, int text_width, i3String *text) {
--    int height = font.height + 2 * logical_px(ws_voff_px) - 2 * logical_px(1);
-+    int height = font.height + 2 * logical_px(ws_voff_px);
+-    int height = bar_height - 2 * logical_px(1);
++    int height = bar_height;
  
      /* Draw the border of the button. */
 -    draw_util_rectangle(surface, border_color, x, logical_px(1), width, height);
@@ -49,4 +49,4 @@ index 671588fe..6014b340 100644
 +    draw_util_rectangle(surface, bg_color, x, 0, width, height);
  
      draw_util_text(text, surface, fg_color, bg_color, x + (width - text_width) / 2,
-                    logical_px(ws_voff_px), text_width);
+                    bar_height / 2 - font.height / 2, text_width);

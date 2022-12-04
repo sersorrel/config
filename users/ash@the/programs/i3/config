@@ -1,5 +1,8 @@
 # i3 config file (v4)
 
+gaps inner 5
+gaps outer -5
+
 set $alt Mod1
 set $mod Mod4
 set $textier Mod1+Mod4+Shift+Control
