@@ -9,6 +9,7 @@
       ./rs
       ./scripts
       ./theme.nix
+      ./waiting-on-hydra.nix
       ./xdg.nix
     ];
 
