@@ -18,9 +18,14 @@ let
       curl=$?
       if [ $curl -ne 0 ]; then
         echo "curl exited with $curl!"
-        name=$(${mktemp} --tmpdir waiting-on-hydra-XXXXXX)
-        printf '%s' "$result" > "$name"
-        ${notify-send} -u critical -t 0 "waiting-on-hydra" "curl exited with $curl for PR $line, output is in $name"
+        if [ $curl -eq 6 ]; then
+          echo "probably no internet connection."
+        else
+          name=$(${mktemp} --tmpdir waiting-on-hydra-XXXXXX)
+          printf '%s' "$result" > "$name"
+          ${notify-send} -u critical -t 0 "waiting-on-hydra" "curl exited with $curl for PR $line, output is in $name"
+        fi
+        continue
       fi
       ${grep} -qF 'class="state-pending"' <<< "$result"
       is_pending=$?
