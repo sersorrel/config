@@ -301,6 +301,10 @@ set guifont=Iosevka\ 10
 " Match Kitty's line spacing.
 set linespace=2
 
+" Stop scrollwheel moving the viewport
+" (in other editors, this is fine, but in nvim it drags the cursor with it,
+" which is less than great: <https://github.com/neovim/neovim/issues/279>)
+set mouse=
 if has('gui_running')
   " Paste with ctrl-shift-v (since gvim can use ctrl-shift!)
   noremap <C-S-v> <C-r><C-o>+
