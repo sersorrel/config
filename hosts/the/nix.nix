@@ -14,7 +14,10 @@ in
     settings.cores = 3; # cores per build
     settings.max-jobs = 3; # simultaneous builds
     settings.experimental-features = [ "nix-command" "flakes" ];
-    settings.keep-outputs = true;
+    settings.keep-outputs = true; # non-garbage derivations keep all their outputs alive
+    settings.connect-timeout = 10; # seconds to try connecting to each binary cache
+    settings.log-lines = 20; # lines displayed after a build failure
+    settings.auto-optimise-store = true; # automatically hardlink store files
     registry = {
       nixpkgs.flake = inputs.nixpkgs;
       nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
