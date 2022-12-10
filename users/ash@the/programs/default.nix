@@ -54,6 +54,7 @@
     ./mpv.nix
     ./nemo.nix
     ./nix-locate.nix
+    ./nix-output-monitor.nix
     ./nix-prefetch.nix
     ./nix-script.nix
     ./notify-send.nix
