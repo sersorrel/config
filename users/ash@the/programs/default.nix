@@ -73,6 +73,7 @@
     ./slack.nix
     ./sqlitebrowser.nix
     ./ssh.nix
+    ./ssss.nix
     ./steam.nix
     ./sublime-merge.nix
     ./syncthing.nix
