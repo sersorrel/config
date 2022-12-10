@@ -70,6 +70,7 @@
     ./rhythmbox.nix
     ./rink.nix
     ./rustup.nix
+    ./sameboy.nix
     ./signal.nix
     ./slack.nix
     ./sqlitebrowser.nix
