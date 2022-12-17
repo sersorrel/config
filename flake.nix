@@ -4,6 +4,8 @@
   inputs.home-manager.url = "github:nix-community/home-manager/release-22.11";
   inputs.home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+  inputs.nix-index-database.url = "github:Mic92/nix-index-database";
+
   inputs.nix-script.url = "github:BrianHicks/nix-script";
   inputs.nix-script.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
@@ -16,7 +18,7 @@
 
   inputs.secrets.url = "secrets";
 
-  outputs = { self, home-manager, nix-script, nixos-channel, nixpkgs, nixpkgs-unstable, secrets } @ inputs: let
+  outputs = { self, home-manager, nix-index-database, nix-script, nixos-channel, nixpkgs, nixpkgs-unstable, secrets } @ inputs: let
     inherit (nixpkgs.lib) filterAttrs nameValuePair;
     asciiLower = "abcdefghijklmnopqrstuvwxyz";
     asciiUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
